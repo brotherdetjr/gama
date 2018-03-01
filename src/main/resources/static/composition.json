@@ -1,0 +1,119 @@
+{
+    "sand_0": {"frames": ["sand_0.png"], "zIndex": 0},
+    "sand_1": {"frames": ["sand_1.png"], "zIndex": 0},
+    "sand_2": {"frames": ["sand_2.png"], "zIndex": 0},
+    "sand_3": {"frames": ["sand_3.png"], "zIndex": 0},
+    "cactus_tall": {"frames": ["cactus_tall.png"], "zIndex": 1},
+    "cactus_round": {"frames": ["cactus_round.png"], "zIndex": 1},
+    "grass_single": {"frames": ["grass_single.png"], "zIndex": 1},
+    "grass_multiple": {"frames": ["grass_multiple.png"], "zIndex": 1},
+    "sign": {"frames": ["sign.png"], "zIndex": 1},
+    "stone_single": {"frames": ["stone_single.png"], "zIndex": 1},
+    "stone_multiple": {"frames": ["stone_multiple.png"], "zIndex": 1},
+    "bant_idle_left": {
+        "frames": ["bant_walk_right_1.png", "bant_walk_right_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "loopFrom": 0
+                }
+            }
+        ],
+        "filters": [{"name": "flip", "params": 1}]
+    },
+    "bant_idle_right": {
+        "frames": ["bant_walk_right_1.png", "bant_walk_right_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "loopFrom": 0
+                }
+            }
+        ]
+    },
+    "bant_idle_up": {
+        "frames": ["bant_walk_up_1.png", "bant_walk_up_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "loopFrom": 0
+                }
+            }
+        ]
+    },
+    "bant_idle_down": {
+        "frames": ["bant_walk_down_1.png", "bant_walk_down_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "loopFrom": 0
+                }
+            }
+        ]
+    },
+    "bant_walk_left": {
+        "frames": ["bant_walk_right_0.png", "bant_walk_right_1.png", "bant_walk_right_2.png", "bant_walk_right_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3],
+                    "loopFrom": 16
+                }
+            }
+        ],
+        "filters": [{"name": "flip", "params": 1}]
+    },
+    "bant_walk_right": {
+        "frames": ["bant_walk_right_0.png", "bant_walk_right_1.png", "bant_walk_right_2.png", "bant_walk_right_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3],
+                    "loopFrom": 16
+                }
+            }
+        ]
+    },
+    "bant_walk_up": {
+        "frames": ["bant_walk_up_0.png", "bant_walk_up_1.png", "bant_walk_up_2.png", "bant_walk_up_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3],
+                    "loopFrom": 16
+                }
+            }
+        ]
+    },
+    "bant_walk_down": {
+        "frames": ["bant_walk_down_0.png", "bant_walk_down_1.png", "bant_walk_down_2.png", "bant_walk_down_3.png"],
+        "zIndex": 100,
+        "transitions": [
+            {
+                "name": "animate",
+                "params": {
+                    "sequence": [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3],
+                    "loopFrom": 16
+                }
+            }
+        ]
+    }
+}
