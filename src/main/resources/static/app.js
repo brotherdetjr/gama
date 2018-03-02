@@ -14,6 +14,6 @@ pixoterm(
         (event) => console.log(event.detail.row + " / " + event.detail.column)
     );
     document.body.appendChild(term.view);
-    var socket = new WebSocket('ws://localhost:8080/websocket');
+    var socket = new WebSocket('ws://localhost:8080/websocket?token=' + token);
     socket.onmessage = (event) => term.render(JSON.parse(event.data));
 });
