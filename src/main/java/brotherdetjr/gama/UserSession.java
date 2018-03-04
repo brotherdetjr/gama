@@ -2,19 +2,21 @@ package brotherdetjr.gama;
 
 import io.javalin.embeddedserver.jetty.websocket.WsSession;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
-import static com.google.common.collect.Sets.newConcurrentHashSet;
+import static com.google.common.collect.Maps.newConcurrentMap;
 
 public final class UserSession {
     private final String username;
-    private final Set<WsSession> wsSessions;
+    private final Map<WsSession, AtomicLong> wsSessions;
     private final AtomicInteger frame;
 
     public UserSession(String username) {
         this.username = username;
-        wsSessions = newConcurrentHashSet();
+        wsSessions = newConcurrentMap();
         frame = new AtomicInteger(0);
     }
 
@@ -22,12 +24,12 @@ public final class UserSession {
         return username;
     }
 
-    public Set<WsSession> getWsSessions() {
-        return wsSessions;
+    public Stream<Map.Entry<WsSession, AtomicLong>> timestampedWsSessions() {
+        return wsSessions.entrySet().stream();
     }
 
     public void addWsSession(WsSession wsSession) {
-        wsSessions.add(wsSession);
+        wsSessions.put(wsSession, new AtomicLong(0));
     }
 
     public void removeWsSession(WsSession wsSession) {

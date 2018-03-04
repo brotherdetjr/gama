@@ -13,7 +13,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static org.bouncycastle.util.encoders.Hex.toHexString;
 
-public class AuthServiceImpl implements AuthService {
+public final class AuthServiceImpl implements AuthService {
 
     private final long salt;
 

@@ -5,17 +5,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import io.javalin.Javalin;
-import io.javalin.embeddedserver.jetty.websocket.WsSession;
 import io.javalin.security.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Supplier;
 
 import static brotherdetjr.gama.UserRole.GAMER;
 import static com.google.common.collect.ImmutableSet.copyOf;
@@ -36,6 +37,7 @@ public final class App {
         int framePeriodInMillis = 2000;
         ObjectMapper objectMapper = new ObjectMapper();
         AuthService authService = new AuthServiceImpl(new Random().nextLong());
+        Supplier<Long> timestampSupplier = System::currentTimeMillis;
         InputStream mapAnimationJson =
                 currentThread().getContextClassLoader().getResourceAsStream("map_animation.json");
         List<List<List<List<CellEntry>>>> mapAnimation =
@@ -47,10 +49,15 @@ public final class App {
                         sessions.forEach((token, session) -> {
                             try {
                                 String json = objectMapper.writeValueAsString(mapAnimation.get(session.nextFrame()));
-                                session.getWsSessions()
-                                        .stream()
-                                        .map(WsSession::getRemote)
-                                        .forEach(r -> r.sendStringByFuture(json));
+                                session.timestampedWsSessions()
+                                        .forEach(entry -> {
+                                            try {
+                                                entry.getKey().getRemote().sendString(json);
+                                                entry.getValue().set(timestampSupplier.get());
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        });
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
