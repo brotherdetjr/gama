@@ -11,7 +11,7 @@
     "stone_single": {"frames": ["stone_single.png"], "zIndex": 1},
     "stone_multiple": {"frames": ["stone_multiple.png"], "zIndex": 1},
     "bant_idle_left": {
-        "frames": ["bant_walk_right_1.png", "bant_walk_right_3.png"],
+        "frames": ["bant_move_right_1.png", "bant_move_right_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -25,7 +25,7 @@
         "filters": [{"name": "flip", "params": 1}]
     },
     "bant_idle_right": {
-        "frames": ["bant_walk_right_1.png", "bant_walk_right_3.png"],
+        "frames": ["bant_move_right_1.png", "bant_move_right_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -38,7 +38,7 @@
         ]
     },
     "bant_idle_up": {
-        "frames": ["bant_walk_up_1.png", "bant_walk_up_3.png"],
+        "frames": ["bant_move_up_1.png", "bant_move_up_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -51,7 +51,7 @@
         ]
     },
     "bant_idle_down": {
-        "frames": ["bant_walk_down_1.png", "bant_walk_down_3.png"],
+        "frames": ["bant_move_down_1.png", "bant_move_down_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -63,8 +63,8 @@
             }
         ]
     },
-    "bant_walk_left": {
-        "frames": ["bant_walk_right_0.png", "bant_walk_right_1.png", "bant_walk_right_2.png", "bant_walk_right_3.png"],
+    "bant_move_left": {
+        "frames": ["bant_move_right_0.png", "bant_move_right_1.png", "bant_move_right_2.png", "bant_move_right_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -77,8 +77,8 @@
         ],
         "filters": [{"name": "flip", "params": 1}]
     },
-    "bant_walk_right": {
-        "frames": ["bant_walk_right_0.png", "bant_walk_right_1.png", "bant_walk_right_2.png", "bant_walk_right_3.png"],
+    "bant_move_right": {
+        "frames": ["bant_move_right_0.png", "bant_move_right_1.png", "bant_move_right_2.png", "bant_move_right_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -90,8 +90,8 @@
             }
         ]
     },
-    "bant_walk_up": {
-        "frames": ["bant_walk_up_0.png", "bant_walk_up_1.png", "bant_walk_up_2.png", "bant_walk_up_3.png"],
+    "bant_move_up": {
+        "frames": ["bant_move_up_0.png", "bant_move_up_1.png", "bant_move_up_2.png", "bant_move_up_3.png"],
         "zIndex": 100,
         "transitions": [
             {
@@ -103,8 +103,8 @@
             }
         ]
     },
-    "bant_walk_down": {
-        "frames": ["bant_walk_down_0.png", "bant_walk_down_1.png", "bant_walk_down_2.png", "bant_walk_down_3.png"],
+    "bant_move_down": {
+        "frames": ["bant_move_down_0.png", "bant_move_down_1.png", "bant_move_down_2.png", "bant_move_down_3.png"],
         "zIndex": 100,
         "transitions": [
             {

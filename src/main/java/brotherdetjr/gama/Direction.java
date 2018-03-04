@@ -1,0 +1,21 @@
+package brotherdetjr.gama;
+
+public enum Direction {
+    UP("DOWN", true), DOWN("UP", true), LEFT("RIGHT", false), RIGHT("LEFT", false);
+
+    private final String opposite;
+    private final boolean vertical;
+
+    Direction(String opposite, boolean vertical) {
+        this.opposite = opposite;
+        this.vertical = vertical;
+    }
+
+    public Direction getOpposite() {
+        return Direction.valueOf(opposite);
+    }
+
+    public boolean isVertical() {
+        return vertical;
+    }
+}

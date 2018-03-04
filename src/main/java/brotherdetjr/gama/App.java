@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 
-import static brotherdetjr.gama.UserRole.GAMER;
+import static brotherdetjr.gama.UserRole.PLAYER;
 import static com.google.common.collect.ImmutableSet.copyOf;
 import static com.google.common.collect.Maps.newConcurrentMap;
 import static com.google.common.collect.Sets.intersection;
@@ -93,7 +93,7 @@ public final class App {
                             });
                             ctx.renderFreemarker("main.html", ImmutableMap.of("token", token));
                         },
-                        roles(GAMER)
+                        roles(PLAYER)
                 ))
                 .ws("/websocket", ws -> {
                             ws.onConnect(session -> {

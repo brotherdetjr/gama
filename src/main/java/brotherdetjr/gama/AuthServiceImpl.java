@@ -7,7 +7,7 @@ import org.bouncycastle.jcajce.provider.digest.SHA3;
 
 import java.util.Set;
 
-import static brotherdetjr.gama.UserRole.GAMER;
+import static brotherdetjr.gama.UserRole.PLAYER;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
@@ -28,7 +28,7 @@ public final class AuthServiceImpl implements AuthService {
 
     @Override
     public Set<UserRole> extractRoles(Context ctx) {
-        return !isNullOrEmpty(innerExtractUsername(ctx)) ? ImmutableSet.of(GAMER) : emptySet();
+        return !isNullOrEmpty(innerExtractUsername(ctx)) ? ImmutableSet.of(PLAYER) : emptySet();
     }
 
     @Override
