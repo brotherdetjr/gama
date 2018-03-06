@@ -9,14 +9,17 @@ public final class CellEntry {
     private final String sprite;
     private final List<Transformation<?>> transitions;
     private final List<Transformation<?>> filters;
+    private final int zIndex;
 
     @JsonCreator
     public CellEntry(@JsonProperty("sprite") String sprite,
                      @JsonProperty("transitions") List<Transformation<?>> transitions,
-                     @JsonProperty("filters") List<Transformation<?>> filters) {
+                     @JsonProperty("filters") List<Transformation<?>> filters,
+                     @JsonProperty("zIndex") int zIndex) {
         this.sprite = sprite;
         this.transitions = transitions;
         this.filters = filters;
+        this.zIndex = zIndex;
     }
 
     public String getSprite() {

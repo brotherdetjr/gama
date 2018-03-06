@@ -1,6 +1,6 @@
 package brotherdetjr.gama;
 
-public class MoveRequest {
+public final class MoveRequest {
     private final Direction direction;
 
     public MoveRequest(Direction direction) {

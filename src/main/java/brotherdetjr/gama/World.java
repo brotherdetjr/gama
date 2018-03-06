@@ -2,7 +2,7 @@ package brotherdetjr.gama;
 
 import java.util.Map;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.emptyMap;
 
@@ -17,7 +17,7 @@ public final class World {
         this.width = width;
         //noinspection unchecked
         items = new Map[height * width];
-        setAll(items, ignore -> newHashSet());
+        setAll(items, ignore -> newHashMap());
     }
 
     public void attach(Item item) {

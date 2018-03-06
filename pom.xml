@@ -7,6 +7,7 @@
 	<artifactId>gama</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<properties>
+        <gmavenplus-plugin.version>1.5</gmavenplus-plugin.version>
 		<guava.version>23.0</guava.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,6 +21,22 @@
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <bouncycastle.version>1.59</bouncycastle.version>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>${gmavenplus-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 	<dependencies>
         <dependency>
             <groupId>io.javalin</groupId>
@@ -39,6 +56,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>

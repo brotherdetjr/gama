@@ -36,6 +36,7 @@ public final class Renderer {
             int column = propelledItem.getColumn();
             for (int c = column - halfWidth - 1; c < column + halfWidth + 1; c++) {
                 List<CellEntry> cell = world.getAt(r, c)
+                        .values()
                         .stream()
                         .map(item -> {
                             String sprite = item.getSprite();
@@ -71,7 +72,7 @@ public final class Renderer {
                                         )
                                 );
                             }
-                            return new CellEntry(sprite, transitions, filters);
+                            return new CellEntry(sprite, transitions, filters, item.getzIndex());
                         }).collect(toList());
                 rowCells.add(cell);
             }

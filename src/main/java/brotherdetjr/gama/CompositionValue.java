@@ -7,7 +7,7 @@ import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 
-public class CompositionValue {
+public final class CompositionValue {
     private final List<String> frames;
     private final int zIndex;
     private final List<? extends Transformation> transitions;

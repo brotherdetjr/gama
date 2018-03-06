@@ -7,7 +7,7 @@ public class Item {
 
     private int row;
     private int column;
-    private int zIndex;
+    private Integer zIndex;
 
     public Item(String sprite, boolean obstacle) {
         this.sprite = sprite;
@@ -30,11 +30,11 @@ public class Item {
         return column;
     }
 
-    public int getzIndex() {
+    public Integer getzIndex() {
         return zIndex;
     }
 
-    public void place(int row, int column, int zIndex) {
+    public void place(int row, int column, Integer zIndex) {
         this.row = row;
         this.column = column;
         this.zIndex = zIndex;
