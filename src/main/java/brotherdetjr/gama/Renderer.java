@@ -25,9 +25,8 @@ public final class Renderer {
         this.world = world;
     }
 
-    List<List<List<CellEntry>>> render(Player user) {
+    public List<List<List<CellEntry>>> render(Person person) {
         List<List<List<CellEntry>>> result = newArrayList();
-        Person person = user.getPerson();
         int halfHeight = screenHeight / 2;
         int row = person.getRow();
         for (int r = row - halfHeight - 1; r < row + halfHeight + 1; r++) {
