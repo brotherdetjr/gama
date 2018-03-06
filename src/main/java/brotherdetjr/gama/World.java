@@ -10,7 +10,7 @@ public final class World {
 
     private final int height;
     private final int width;
-    private final Set<Placed>[] map;
+    private final Set<Item>[] map;
 
     public World(int height, int width) {
         this.height = height;
@@ -20,15 +20,15 @@ public final class World {
         setAll(map, ignore -> newHashSet());
     }
 
-    public void attach(Placed obj) {
+    public void attach(Item obj) {
         getAt(obj.getRow(), obj.getColumn()).add(obj);
     }
 
-    public void detach(Placed obj) {
+    public void detach(Item obj) {
         getAt(obj.getRow(), obj.getColumn()).remove(obj);
     }
 
-    public Set<Placed> getAt(int row, int column) {
+    public Set<Item> getAt(int row, int column) {
         if (embraces(row, column)) {
             return map[row * width + column];
         } else {

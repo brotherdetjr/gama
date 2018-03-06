@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-up" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="140">
+ <tileset firstgid="1" source="desert.tsx"/>
+ <layer name="ground" width="32" height="32" locked="1">
+  <data encoding="csv">
+18,20,18,20,18,20,18,20,18,20,20,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,
+19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,
+18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,
+19,20,19,20,19,20,19,20,19,20,19,21,19,20,19,20,21,21,21,21,21,20,19,20,21,21,19,20,19,20,19,20,
+18,20,18,21,18,20,18,20,18,21,18,20,18,20,18,21,21,20,18,20,21,21,21,21,21,20,21,21,21,20,18,20,
+21,20,21,21,19,20,19,20,19,20,19,20,19,20,21,21,19,20,21,21,21,21,21,21,21,21,21,21,21,20,19,20,
+21,20,21,20,18,20,21,20,18,20,18,20,18,20,21,20,18,21,21,20,21,21,21,21,21,21,21,21,18,20,18,21,
+21,20,21,21,21,21,21,21,19,20,19,20,19,20,21,21,21,20,19,20,21,20,19,21,21,20,19,21,21,21,19,21,
+21,20,21,21,18,20,18,21,21,21,18,20,18,20,21,21,18,20,18,21,21,20,18,20,18,20,21,21,21,20,21,20,
+19,20,19,20,19,20,19,20,19,21,21,20,19,20,21,21,19,20,19,21,19,20,19,20,21,21,21,20,19,20,21,21,
+18,20,21,21,21,20,18,20,18,20,18,20,18,20,18,21,21,20,18,21,18,20,18,21,21,20,18,20,18,20,21,21,
+19,21,21,20,21,21,21,21,19,20,19,20,19,20,19,21,21,21,19,21,19,20,19,21,21,20,19,20,21,21,21,21,
+18,21,18,20,18,21,18,20,18,20,18,20,18,20,18,20,21,21,18,21,18,20,18,20,21,21,18,20,18,20,21,21,
+19,21,19,20,21,21,19,20,19,20,19,20,21,20,19,20,21,21,21,21,19,20,19,20,19,21,19,20,19,20,21,21,
+18,20,18,20,21,20,18,20,18,20,18,20,18,21,18,20,18,21,21,21,18,20,18,20,18,20,18,20,18,20,21,20,
+19,20,19,20,21,20,19,20,19,20,19,20,19,20,19,20,19,20,21,21,21,21,19,20,19,20,19,20,19,20,19,21,
+18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,18,20,21,21,21,21,21,20,18,20,18,20,18,21,
+19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,19,20,21,21,21,20,21,21,19,20,19,20,19,20,
+18,20,18,21,21,21,21,21,18,20,18,20,18,20,18,20,18,20,18,20,18,21,21,20,18,21,18,20,18,20,18,20,
+19,20,21,21,19,20,19,21,19,20,19,20,19,20,19,20,19,20,19,20,19,21,21,20,19,21,19,20,19,20,21,21,
+18,20,18,21,21,21,21,21,21,20,21,21,21,21,21,21,21,20,18,20,18,20,18,20,18,21,18,21,21,21,21,20,
+19,20,19,20,19,20,21,21,21,20,19,20,19,20,21,21,21,20,19,20,19,20,19,20,19,21,21,21,19,20,19,20,
+18,20,18,20,18,20,21,21,21,21,18,20,18,21,21,20,18,20,18,20,18,20,18,20,21,21,21,20,18,20,18,20,
+21,21,21,21,21,21,21,20,21,20,19,20,19,21,19,21,21,21,21,21,19,20,19,20,19,21,21,20,19,20,19,20,
+21,20,18,20,18,20,18,20,21,21,21,20,18,21,21,21,18,20,18,21,21,20,18,20,18,20,18,21,18,20,18,20,
+21,20,19,20,19,20,19,20,21,21,19,20,21,20,21,20,19,20,19,21,19,20,19,20,19,20,19,21,21,20,19,20,
+21,21,18,20,18,20,18,21,21,20,18,21,21,20,21,20,18,20,21,20,18,20,18,20,18,20,18,20,21,20,18,20,
+19,21,21,20,19,20,19,21,19,20,19,21,19,20,21,20,19,20,21,20,19,20,19,20,19,20,19,20,19,21,19,20,
+18,20,21,21,18,20,18,21,18,20,18,21,18,20,21,20,18,20,18,21,21,20,18,20,18,20,18,20,18,21,21,20,
+19,20,19,21,21,20,19,20,19,20,19,21,19,21,21,20,19,20,19,20,21,21,19,20,19,20,19,20,19,20,21,21,
+18,20,18,20,21,21,18,20,18,20,18,21,21,21,18,20,18,20,18,20,18,20,21,21,21,20,18,20,18,20,18,20,
+19,20,19,20,19,20,21,21,19,20,19,21,21,20,19,20,19,20,19,20,19,20,19,20,21,20,19,20,19,20,19,20
+</data>
+ </layer>
+ <objectgroup name="objects" locked="1">
+  <object id="48" type="visible" gid="15" x="352" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="51" type="visible" gid="15" x="992" y="480" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="52" type="visible" gid="15" x="608" y="384" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="53" type="visible" gid="15" x="576" y="448" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="54" type="visible" gid="15" x="288" y="640" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="55" type="visible" gid="15" x="576" y="864" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="56" type="visible" gid="15" x="160" y="320" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="57" type="visible" gid="15" x="832" y="160" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="58" type="visible" gid="15" x="224" y="928" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="59" type="visible" gid="15" x="640" y="416" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="61" type="visible" gid="14" x="672" y="384" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="62" type="visible" gid="14" x="608" y="416" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="63" type="visible" gid="14" x="704" y="448" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="64" type="visible" gid="14" x="0" y="544" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="65" type="visible" gid="14" x="448" y="960" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="66" type="visible" gid="14" x="640" y="640" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="67" type="visible" gid="14" x="768" y="704" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="68" type="visible" gid="14" x="384" y="288" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="69" type="visible" gid="14" x="640" y="480" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="70" type="visible" gid="14" x="704" y="576" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="71" type="visible" gid="15" x="704" y="352" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="73" type="visible" gid="22" x="224" y="64" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="sign"/>
+   </properties>
+  </object>
+  <object id="75" type="visible" gid="22" x="768" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="sign"/>
+   </properties>
+  </object>
+  <object id="76" type="visible" gid="23" x="128" y="768" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="78" type="visible" gid="23" x="448" y="608" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="79" type="visible" gid="23" x="576" y="672" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="80" type="visible" gid="23" x="160" y="352" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="81" type="visible" gid="23" x="320" y="544" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="82" type="visible" gid="23" x="480" y="576" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="83" type="visible" gid="23" x="512" y="640" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="84" type="visible" gid="23" x="544" y="544" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="85" type="visible" gid="23" x="576" y="224" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="86" type="visible" gid="23" x="672" y="352" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="87" type="visible" gid="23" x="832" y="512" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="88" type="visible" gid="23" x="672" y="800" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="89" type="visible" gid="23" x="320" y="768" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="90" type="visible" gid="23" x="608" y="896" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="91" type="visible" gid="23" x="896" y="896" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="92" type="visible" gid="23" x="736" y="864" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="93" type="visible" gid="23" x="320" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="94" type="visible" gid="23" x="160" y="512" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="95" type="visible" gid="23" x="32" y="928" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="96" type="visible" gid="23" x="160" y="992" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="97" type="visible" gid="23" x="992" y="640" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="98" type="visible" gid="23" x="992" y="800" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="99" type="visible" gid="23" x="0" y="608" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="100" type="visible" gid="23" x="0" y="768" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="101" type="visible" gid="23" x="64" y="96" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="102" type="visible" gid="23" x="672" y="32" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="103" type="visible" gid="23" x="704" y="64" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_multiple"/>
+   </properties>
+  </object>
+  <object id="104" type="visible" gid="24" x="480" y="160" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="105" type="visible" gid="24" x="384" y="480" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="106" type="visible" gid="24" x="192" y="416" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="107" type="visible" gid="24" x="512" y="576" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="108" type="visible" gid="24" x="480" y="640" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="109" type="visible" gid="24" x="576" y="608" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="110" type="visible" gid="24" x="352" y="864" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="111" type="visible" gid="24" x="0" y="832" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="112" type="visible" gid="24" x="896" y="288" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="113" type="visible" gid="24" x="256" y="96" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="114" type="visible" gid="24" x="736" y="992" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="115" type="visible" gid="24" x="704" y="1024" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="116" type="visible" gid="24" x="960" y="672" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="117" type="visible" gid="24" x="640" y="448" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="118" type="visible" gid="24" x="704" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="119" type="visible" gid="24" x="800" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="stone_single"/>
+   </properties>
+  </object>
+  <object id="120" type="visible" gid="13" x="192" y="672" width="32" height="32">
+   <properties>
+    <property name="sprite" value="bones"/>
+   </properties>
+  </object>
+  <object id="121" type="visible" gid="13" x="416" y="1024" width="32" height="32">
+   <properties>
+    <property name="sprite" value="bones"/>
+   </properties>
+  </object>
+  <object id="122" type="visible" gid="13" x="608" y="704" width="32" height="32">
+   <properties>
+    <property name="sprite" value="bones"/>
+   </properties>
+  </object>
+  <object id="123" type="visible" gid="13" x="224" y="32" width="32" height="32">
+   <properties>
+    <property name="sprite" value="bones"/>
+   </properties>
+  </object>
+  <object id="124" type="visible" gid="16" x="192" y="224" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="125" type="visible" gid="16" x="640" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="126" type="visible" gid="16" x="704" y="480" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="127" type="visible" gid="16" x="480" y="608" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="128" type="visible" gid="16" x="480" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="129" type="visible" gid="16" x="256" y="864" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="130" type="visible" gid="16" x="224" y="608" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="131" type="visible" gid="16" x="96" y="1024" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="132" type="visible" gid="16" x="960" y="160" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="133" type="visible" gid="16" x="992" y="224" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_multiple"/>
+   </properties>
+  </object>
+  <object id="134" type="visible" gid="17" x="640" y="96" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+  <object id="135" type="visible" gid="17" x="704" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+    <property name="zIndex" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="136" type="visible" gid="17" x="480" y="288" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+  <object id="137" type="visible" gid="17" x="32" y="384" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+  <object id="138" type="visible" gid="17" x="96" y="160" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+  <object id="139" type="visible" gid="17" x="608" y="480" width="32" height="32">
+   <properties>
+    <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

@@ -3,6 +3,7 @@
     "sand_1": {"frames": ["sand_1.png"], "zIndex": 0},
     "sand_2": {"frames": ["sand_2.png"], "zIndex": 0},
     "sand_3": {"frames": ["sand_3.png"], "zIndex": 0},
+    "bones": {"frames": ["bones.png"], "zIndex": 1},
     "cactus_tall": {"frames": ["cactus_tall.png"], "zIndex": 1},
     "cactus_round": {"frames": ["cactus_round.png"], "zIndex": 1},
     "grass_single": {"frames": ["grass_single.png"], "zIndex": 1},

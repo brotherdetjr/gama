@@ -25,29 +25,27 @@ public final class Renderer {
         this.world = world;
     }
 
-    public List<List<List<CellEntry>>> render(Person person) {
+    public List<List<List<CellEntry>>> render(PropelledItem propelledItem) {
         List<List<List<CellEntry>>> result = newArrayList();
         int halfHeight = screenHeight / 2;
-        int row = person.getRow();
+        int row = propelledItem.getRow();
         for (int r = row - halfHeight - 1; r < row + halfHeight + 1; r++) {
             ArrayList<List<CellEntry>> rowCells = newArrayList();
             result.add(rowCells);
             int halfWidth = screenWidth / 2;
-            int column = person.getColumn();
+            int column = propelledItem.getColumn();
             for (int c = column - halfWidth - 1; c < column + halfWidth + 1; c++) {
                 List<CellEntry> cell = world.getAt(r, c)
                         .stream()
-                        .filter(obj -> obj instanceof SpriteAware)
-                        .map(obj -> (SpriteAware) obj)
-                        .map(obj -> {
-                            String sprite = obj.getSprite();
+                        .map(item -> {
+                            String sprite = item.getSprite();
                             List<Transformation<?>> transitions = newArrayList();
                             List<Transformation<?>> filters = newArrayList();
-                            if (obj instanceof Directional) {
-                                Direction direction = ((Directional) obj).getDirection();
-                                if (obj instanceof Propelled) {
+                            if (item instanceof Directional) {
+                                Direction direction = ((Directional) item).getDirection();
+                                if (item instanceof Propelled) {
                                     sprite += "_";
-                                    if (((Propelled) obj).isJustMoved()) {
+                                    if (((Propelled) item).isJustMoved()) {
                                         sprite += "move";
                                         ShiftFilterParams shiftParams = new ShiftFilterParams(
                                                 direction.getOpposite().toString().toLowerCase(),
@@ -58,10 +56,10 @@ public final class Renderer {
                                         sprite += "idle";
                                     }
                                 }
-                                sprite += "_" + ((Directional) obj).getDirection().name().toLowerCase();
+                                sprite += "_" + ((Directional) item).getDirection().name().toLowerCase();
                             }
-                            if (person.isJustMoved()) {
-                                Direction direction = person.getDirection();
+                            if (propelledItem.isJustMoved()) {
+                                Direction direction = propelledItem.getDirection();
                                 MoveTransitionParams moveParams = new MoveTransitionParams(
                                         direction.getOpposite().toString().toLowerCase(),
                                         distancePx(direction)

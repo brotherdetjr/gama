@@ -1,6 +1,6 @@
 package brotherdetjr.gama;
 
-public interface Directional extends Placed {
+public interface Directional {
     Direction getDirection();
     void setDirection(Direction direction);
 }
