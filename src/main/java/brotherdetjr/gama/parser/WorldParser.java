@@ -18,26 +18,32 @@ public final class WorldParser {
         throw new AssertionError();
     }
 
-    public static World parse(String tmxXml, Map<Integer, String> gidToSprite) {
+    public static World parse(String tmxXml, Map<Integer, String> gidToSprite, String compositionJson) {
         try {
             TmxMap tmxMap = xmlMapper.readValue(tmxXml, TmxMap.class);
             World world = new World(tmxMap.getHeight(), tmxMap.getWidth());
             Layer layer = tmxMap.getLayer();
-            StringTokenizer tokenizer = new StringTokenizer(layer.getData(), "\n\t ,");
-            int r = 0;
-            int c = 0;
-            while (tokenizer.hasMoreElements()) {
-                Item item = new Item(gidToSprite.get(parseInt(tokenizer.nextToken())), false);
-                item.place(r, c++, 0);
-                if (c >= layer.getWidth()) {
-                    c = 0;
-                    r++;
-                }
-                world.attach(item);
+            if (layer != null && layer.getData() != null) {
+                parseGround(layer, world, gidToSprite);
             }
             return world;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void parseGround(Layer layer, World world, Map<Integer, String> gidToSprite) {
+        StringTokenizer tokenizer = new StringTokenizer(layer.getData(), "\n\t ,");
+        int r = 0;
+        int c = 0;
+        while (tokenizer.hasMoreElements()) {
+            Item item = new Item(gidToSprite.get(parseInt(tokenizer.nextToken())), false);
+            item.place(r, c++, 0);
+            if (c >= layer.getWidth()) {
+                c = 0;
+                r++;
+            }
+            world.attach(item);
         }
     }
 }

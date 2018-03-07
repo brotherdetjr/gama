@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map width="3" height="2">
+    <objectgroup name="objects" locked="1">
+        <object id="48" type="item" gid="15" x="64" y="0" width="32" height="32">
+            <properties>
+                <property name="obstacle" type="bool" value="true"/>
+                <property name="sprite" value="cactus_tall"/>
+            </properties>
+        </object>
+        <object id="49" type="item" gid="16" x="64" y="0" width="32" height="32">
+            <properties>
+                <property name="obstacle" type="bool" value="false"/>
+                <property name="sprite" value="grass_multiple"/>
+                <property name="zIndex" type="int" value="0"/>
+            </properties>
+        </object>
+        <object id="50" type="directionalItem" gid="17" x="32" y="0" width="32" height="32">
+            <properties>
+                <property name="obstacle" type="bool" value="false"/>
+                <property name="sprite" value="arrow"/>
+                <property name="direction" value="right"/>
+            </properties>
+        </object>
+        <object id="51" type="propelledItem" gid="17" x="0" y="32" width="32" height="32">
+            <properties>
+                <property name="obstacle" type="bool" value="false"/>
+                <property name="sprite" value="arrow"/>
+                <property name="direction" value="down"/>
+                <property name="justMoved" type="bool" value="true"/>
+            </properties>
+        </object>
+    </objectgroup>
+</map>

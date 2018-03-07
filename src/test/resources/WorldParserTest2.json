@@ -1,0 +1,20 @@
+{
+  "cactus_tall": {
+    "frames": [
+      "cactus_tall.png"
+    ],
+    "zIndex": 1
+  },
+  "grass_multiple": {
+    "frames": [
+      "grass_multiple.png"
+    ],
+    "zIndex": 1
+  },
+  "arrow": {
+    "frames": [
+      "arrow_right.png"
+    ],
+    "zIndex": 1
+  }
+}
