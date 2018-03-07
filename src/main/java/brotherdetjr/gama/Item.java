@@ -34,13 +34,14 @@ public class Item {
         return zIndex;
     }
 
-    public void place(int row, int column, Integer zIndex) {
+    public Item place(int row, int column, Integer zIndex) {
         this.row = row;
         this.column = column;
         this.zIndex = zIndex;
+        return this;
     }
 
-    public void place(int row, int column) {
-        place(row, column, zIndex);
+    public Item place(int row, int column) {
+        return place(row, column, zIndex);
     }
 }

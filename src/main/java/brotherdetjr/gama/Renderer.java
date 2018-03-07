@@ -42,11 +42,12 @@ public final class Renderer {
                             String sprite = item.getSprite();
                             List<Transformation<?>> transitions = newArrayList();
                             List<Transformation<?>> filters = newArrayList();
-                            if (item instanceof Directional) {
-                                Direction direction = ((Directional) item).getDirection();
-                                if (item instanceof Propelled) {
+                            if (item instanceof DirectionalItem) {
+                                DirectionalItem directionalItem = (DirectionalItem) item;
+                                Direction direction = directionalItem.getDirection();
+                                if (item instanceof PropelledItem) {
                                     sprite += "_";
-                                    if (((Propelled) item).isJustMoved()) {
+                                    if (((PropelledItem) item).isJustMoved()) {
                                         sprite += "move";
                                         ShiftFilterParams shiftParams = new ShiftFilterParams(
                                                 direction.getOpposite().toString().toLowerCase(),
@@ -57,7 +58,7 @@ public final class Renderer {
                                         sprite += "idle";
                                     }
                                 }
-                                sprite += "_" + ((Directional) item).getDirection().name().toLowerCase();
+                                sprite += "_" + directionalItem.getDirection().name().toLowerCase();
                             }
                             if (propelledItem.isJustMoved()) {
                                 Direction direction = propelledItem.getDirection();

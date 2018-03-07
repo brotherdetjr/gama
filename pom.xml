@@ -20,6 +20,7 @@
         <jackson.version>2.9.4</jackson.version>
         <freemarker.version>2.3.27-incubating</freemarker.version>
         <bouncycastle.version>1.59</bouncycastle.version>
+        <unitils.version>3.4.6</unitils.version>
     </properties>
     <build>
         <plugins>
@@ -100,5 +101,11 @@
 			<version>${spock.version}</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils-core</artifactId>
+            <version>${unitils.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
