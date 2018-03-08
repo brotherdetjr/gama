@@ -24,10 +24,10 @@ public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem,
             world.detach(propelledItem);
             propelledItem.place(r, c);
             world.attach(propelledItem);
-            propelledItem.setJustMoved(true);
+            propelledItem.markJustMoved();
         } else {
-            propelledItem.setJustMoved(false);
+            propelledItem.unmarkJustMoved();
         }
-        propelledItem.setDirection(moveRequest.getDirection());
+        propelledItem.pointTo(moveRequest.getDirection());
     }
 }

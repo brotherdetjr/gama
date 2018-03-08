@@ -11,8 +11,12 @@ public enum Direction {
         this.vertical = vertical;
     }
 
+    public static Direction parse(String text) {
+        return valueOf(text.toUpperCase());
+    }
+
     public Direction getOpposite() {
-        return Direction.valueOf(opposite);
+        return valueOf(opposite);
     }
 
     public boolean isVertical() {

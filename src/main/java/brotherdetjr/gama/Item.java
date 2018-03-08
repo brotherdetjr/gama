@@ -1,6 +1,9 @@
 package brotherdetjr.gama;
 
-public class Item {
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+
+public class Item<T extends Item> {
 
     private final String sprite;
     private final boolean obstacle;
@@ -9,39 +12,58 @@ public class Item {
     private int column;
     private Integer zIndex;
 
-    public Item(String sprite, boolean obstacle) {
+    protected Item(String sprite, boolean obstacle) {
         this.sprite = sprite;
         this.obstacle = obstacle;
     }
 
-    public String getSprite() {
+    public static Item<? extends Item> newItem(String sprite, boolean obstacle) {
+        return new Item<>(sprite, obstacle);
+    }
+
+    public final String getSprite() {
         return sprite;
     }
 
-    public boolean isObstacle() {
+    public final boolean isObstacle() {
         return obstacle;
     }
 
-    public int getRow() {
+    public final int getRow() {
         return row;
     }
 
-    public int getColumn() {
+    public final int getColumn() {
         return column;
     }
 
-    public Integer getzIndex() {
+    public final Integer getzIndex() {
         return zIndex;
     }
 
-    public Item place(int row, int column, Integer zIndex) {
+    @SuppressWarnings("unchecked")
+    public final T place(int row, int column, Integer zIndex) {
         this.row = row;
         this.column = column;
         this.zIndex = zIndex;
-        return this;
+        return (T) this;
     }
 
-    public Item place(int row, int column) {
+    public final T place(int row, int column) {
         return place(row, column, zIndex);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
+
+    protected ToStringHelper toStringHelper() {
+        return MoreObjects.toStringHelper(this)
+                .add("sprite", sprite)
+                .add("obstacle", obstacle)
+                .add("row", row)
+                .add("column", column)
+                .add("zIndex", zIndex);
     }
 }

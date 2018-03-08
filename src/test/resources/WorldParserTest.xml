@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-up" width="3" height="2"
+     tilewidth="32" tileheight="10" infinite="0" nextobjectid="140">
+    <tileset firstgid="1" source="desert.tsx"/>
+    <layer name="ground" width="3" height="2" locked="1">
+        <data encoding="csv">
+            18,19,20,
+            21,18,19
+        </data>
+    </layer>
+    <objectgroup name="objects" locked="1">
+        <!-- 100500 means "whatever" -->
+        <object id="48" type="item" gid="15" x="64" y="0" width="100500" height="100500">
+            <properties>
+                <property name="obstacle" type="bool" value="true"/>
+                <property name="sprite" value="cactus_tall"/>
+                <property name="zIndex" type="int" value="2"/>
+            </properties>
+        </object>
+        <object id="49" type="item" gid="16" x="64" y="0" width="100500" height="100500">
+            <properties>
+                <property name="obstacle" type="bool" value="false"/>
+                <property name="sprite" value="grass_multiple"/>
+            </properties>
+        </object>
+        <object id="50" type="directionalItem" gid="17" x="32" y="0" width="100500" height="100500">
+            <properties>
+                <property name="sprite" value="arrow"/>
+            </properties>
+        </object>
+        <object id="51" type="propelledItem" gid="17" x="0" y="10" width="100500" height="100500">
+            <properties>
+                <property name="obstacle" type="bool" value="true"/>
+                <property name="sprite" value="girl"/>
+                <property name="direction" value="right"/>
+                <property name="zIndex" type="int" value="1"/>
+            </properties>
+        </object>
+    </objectgroup>
+</map>

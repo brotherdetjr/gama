@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TmxObject {
+public final class TmxObject {
     private final String type;
     private final int y;
     private final int x;
@@ -40,5 +42,22 @@ public class TmxObject {
 
     public List<TmxProperty> getProperties() {
         return properties;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T prop(String name) {
+        return (T) properties.stream()
+                .filter(p -> name.equals(p.getName()))
+                .map(TmxProperty::typedValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public <T> T prop(String name, T defaultValue) {
+        return Optional.<T>ofNullable(prop(name)).orElse(defaultValue);
+    }
+
+    public <T> T prop(String name, Supplier<T> defaultSupplier) {
+        return Optional.<T>ofNullable(prop(name)).orElseGet(defaultSupplier);
     }
 }
