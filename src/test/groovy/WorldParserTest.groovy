@@ -6,16 +6,16 @@ import static brotherdetjr.gama.Direction.RIGHT
 import static brotherdetjr.gama.DirectionalItem.newDirectionalItem
 import static brotherdetjr.gama.Item.newItem
 import static brotherdetjr.gama.PropelledItem.newPropelledItem
-import static java.lang.Thread.currentThread
+import static brotherdetjr.gama.ResourceUtils.asString
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals
 
 class WorldParserTest extends Specification {
     def 'parses one ground layer and one object group'() {
         given:
         def world = WorldParser.parse(
-                currentThread().contextClassLoader.getResourceAsStream('WorldParserTest.xml').text,
+                asString('WorldParserTest.xml'),
                 [18: 'sand_0', 19: 'sand_1', 20: 'sand_2', 21: 'sand_3'],
-                currentThread().contextClassLoader.getResourceAsStream('WorldParserTest.json').text
+                asString('WorldParserTest.json')
         )
         expect:
         with(world) {

@@ -60,11 +60,12 @@ public final class Renderer {
                                 }
                                 sprite += "_" + directionalItem.getDirection().name().toLowerCase();
                             }
-                            if (propelledItem.isJustMoved()) {
+                            if (propelledItem.isJustMoved() && item != propelledItem) {
                                 Direction direction = propelledItem.getDirection();
                                 MoveTransitionParams moveParams = new MoveTransitionParams(
                                         direction.getOpposite().toString().toLowerCase(),
-                                        distancePx(direction)
+                                        distancePx(direction),
+                                        2 // TODO
                                 );
                                 transitions.add(
                                         new Transformation<>(

@@ -8,14 +8,17 @@ public final class MoveTransitionParams {
 
     private final String direction;
     private final int distancePx;
+    private final int stepPx;
 
     @JsonCreator
     public MoveTransitionParams(
             @JsonProperty("direction") String direction,
-            @JsonProperty("distancePx") int distancePx) {
-        Direction.valueOf(direction.toUpperCase()); // simple validation
+            @JsonProperty("distancePx") int distancePx,
+            @JsonProperty("stepPx") int stepPx) {
+        Direction.parse(direction); // simple validation
         this.direction = direction;
         this.distancePx = distancePx;
+        this.stepPx = stepPx;
     }
 
     public String getDirection() {
@@ -24,5 +27,9 @@ public final class MoveTransitionParams {
 
     public int getDistancePx() {
         return distancePx;
+    }
+
+    public int getStepPx() {
+        return stepPx;
     }
 }

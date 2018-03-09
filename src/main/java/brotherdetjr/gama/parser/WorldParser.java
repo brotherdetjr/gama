@@ -79,7 +79,7 @@ public final class WorldParser {
         } else {
             key = sprite;
         }
-        int row = obj.getY() / tileHeight;
+        int row = obj.getY() / tileHeight - 1;
         int column = obj.getX() / tileWidth;
         int zIndex = obj.prop("zIndex", () -> composition.get(key).getzIndex());
         item.place(row, column, zIndex);

@@ -1,7 +1,7 @@
 package brotherdetjr.gama;
 
+import brotherdetjr.gama.parser.WorldParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import io.javalin.Javalin;
@@ -10,21 +10,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 
+import static brotherdetjr.gama.Direction.UP;
+import static brotherdetjr.gama.PropelledItem.newPropelledItem;
+import static brotherdetjr.gama.ResourceUtils.asString;
 import static brotherdetjr.gama.UserRole.PLAYER;
 import static com.google.common.collect.ImmutableSet.copyOf;
 import static com.google.common.collect.Maps.newConcurrentMap;
 import static com.google.common.collect.Sets.intersection;
 import static io.javalin.ApiBuilder.get;
 import static io.javalin.security.Role.roles;
-import static java.lang.Thread.currentThread;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -37,31 +36,38 @@ public final class App {
         int framePeriodInMillis = 2000;
         ObjectMapper objectMapper = new ObjectMapper();
         AuthService authService = new AuthServiceImpl(new Random().nextLong());
+        ImmutableMap<Integer, String> gidToSprite =
+                ImmutableMap.of(18, "sand_0", 19, "sand_1", 20, "sand_2", 21, "sand_3");
+        World world = WorldParser.parse(
+                asString("map.tmx"),
+                gidToSprite,
+                asString("static/composition.json")
+        );
+        PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world, true);
+        PropelledItem bant = newPropelledItem("bant", true).place(31, 17, 100).pointTo(UP);
+        world.attach(bant);
+        Renderer renderer = new Renderer(7, 7, 32, 32, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
-        InputStream mapAnimationJson =
-                currentThread().getContextClassLoader().getResourceAsStream("map_animation.json");
-        List<List<List<List<CellEntry>>>> mapAnimation =
-                objectMapper.readValue(mapAnimationJson, new TypeReference<List<List<List<List<CellEntry>>>>>() {
-                });
         Map<String, UserSession> sessions = newConcurrentMap();
-        ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(() ->
-                        sessions.forEach((token, session) -> {
-                            try {
-                                String json = objectMapper.writeValueAsString(mapAnimation.get(session.nextFrame()));
-                                session.timestampedWsSessions()
-                                        .forEach(entry -> {
-                                            try {
-                                                entry.getKey().getRemote().sendString(json);
-                                                entry.getValue().set(timestampSupplier.get());
-                                            } catch (IOException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                        });
-                            } catch (JsonProcessingException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }),
+        newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                    sessions.forEach((token, session) -> {
+                        try {
+                            String json = objectMapper.writeValueAsString(renderer.render(bant));
+                            session.timestampedWsSessions()
+                                    .forEach(entry -> {
+                                        try {
+                                            entry.getKey().getRemote().sendString(json);
+                                            entry.getValue().set(timestampSupplier.get());
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    propelledItemMoveHandler.accept(bant, new MoveRequest(UP));
+                },
                 framePeriodInMillis,
                 framePeriodInMillis,
                 MILLISECONDS
