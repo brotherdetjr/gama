@@ -15,7 +15,8 @@ class WorldParserTest extends Specification {
         def world = WorldParser.parse(
                 asString('WorldParserTest.xml'),
                 [18: 'sand_0', 19: 'sand_1', 20: 'sand_2', 21: 'sand_3'],
-                asString('WorldParserTest.json')
+                asString('WorldParserTest.json'),
+                true
         )
         expect:
         with(world) {
@@ -55,6 +56,20 @@ class WorldParserTest extends Specification {
                 assertReflectionEquals(
                         [0: newItem('sand_1', false).place(1, 2, 0)],
                         getAt(1, 2)
+                )
+                assertReflectionEquals(
+                        [
+                                0: newItem('sand_3', false).place(1, 0, 0),
+                                1: newPropelledItem('girl', true).place(1, 0, 1).pointTo(RIGHT)
+                        ],
+                        getAt(1, 3)
+                )
+                assertReflectionEquals(
+                        [
+                                0: newItem('sand_3', false).place(1, 0, 0),
+                                1: newPropelledItem('girl', true).place(1, 0, 1).pointTo(RIGHT)
+                        ],
+                        getAt(1, -3)
                 )
             }
         }

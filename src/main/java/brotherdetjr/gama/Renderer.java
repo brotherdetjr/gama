@@ -12,9 +12,10 @@ public final class Renderer {
     private final int screenWidth;
     private final int spriteHeightPx;
     private final int spriteWidthPx;
+    private final int border;
     private final World world;
 
-    public Renderer(int screenHeight, int screenWidth, int spriteHeightPx, int spriteWidthPx, World world) {
+    public Renderer(int screenHeight, int screenWidth, int spriteHeightPx, int spriteWidthPx, int border, World world) {
         if (screenHeight % 2 == 0 || screenWidth % 2 == 0) {
             throw new IllegalArgumentException("screenHeight and screenWidth should be odd");
         }
@@ -22,6 +23,7 @@ public final class Renderer {
         this.screenWidth = screenWidth;
         this.spriteHeightPx = spriteHeightPx;
         this.spriteWidthPx = spriteWidthPx;
+        this.border = border;
         this.world = world;
     }
 
@@ -29,12 +31,12 @@ public final class Renderer {
         List<List<List<CellEntry>>> result = newArrayList();
         int halfHeight = screenHeight / 2;
         int row = propelledItem.getRow();
-        for (int r = row - halfHeight - 1; r < row + halfHeight + 1; r++) {
+        for (int r = row - halfHeight - border; r <= row + halfHeight + border; r++) {
             ArrayList<List<CellEntry>> rowCells = newArrayList();
             result.add(rowCells);
             int halfWidth = screenWidth / 2;
             int column = propelledItem.getColumn();
-            for (int c = column - halfWidth - 1; c < column + halfWidth + 1; c++) {
+            for (int c = column - halfWidth - border; c <= column + halfWidth + border; c++) {
                 List<CellEntry> cell = world.getAt(r, c)
                         .values()
                         .stream()
@@ -44,19 +46,8 @@ public final class Renderer {
                             List<Transformation<?>> filters = newArrayList();
                             if (item instanceof DirectionalItem) {
                                 DirectionalItem directionalItem = (DirectionalItem) item;
-                                Direction direction = directionalItem.getDirection();
                                 if (item instanceof PropelledItem) {
-                                    sprite += "_";
-                                    if (((PropelledItem) item).isJustMoved()) {
-                                        sprite += "move";
-                                        ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                                direction.getOpposite().toString().toLowerCase(),
-                                                distancePx(direction)
-                                        );
-                                        filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                    } else {
-                                        sprite += "idle";
-                                    }
+                                    sprite += "_" + (((PropelledItem) item).isJustMoved() ? "move" : "idle");
                                 }
                                 sprite += "_" + directionalItem.getDirection().name().toLowerCase();
                             }

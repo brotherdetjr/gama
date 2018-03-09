@@ -5,11 +5,9 @@ import java.util.function.BiConsumer;
 public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem, MoveRequest> {
 
     private final World world;
-    private final boolean torus;
 
-    public PropelledItemMoveHandler(World world, boolean torus) {
+    public PropelledItemMoveHandler(World world) {
         this.world = world;
-        this.torus = torus;
     }
 
     @Override
@@ -21,14 +19,6 @@ public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem,
             case DOWN: r++; break;
             case LEFT: c--; break;
             case RIGHT: c++;
-        }
-        if (torus && !world.embraces(r, c)) {
-            switch (moveRequest.getDirection()) {
-                case UP: r = world.getHeight() - 1; break;
-                case DOWN: r = 0; break;
-                case LEFT: c = world.getWidth() - 1; break;
-                case RIGHT: c = 0;
-            }
         }
         if (world.embraces(r, c) && world.getAt(r, c).values().stream().noneMatch(Item::isObstacle)) {
             world.detach(propelledItem);

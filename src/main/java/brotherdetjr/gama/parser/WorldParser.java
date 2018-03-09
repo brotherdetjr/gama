@@ -28,10 +28,10 @@ public final class WorldParser {
         throw new AssertionError();
     }
 
-    public static World parse(String tmxXml, Map<Integer, String> gidToSprite, String compositionJson) {
+    public static World parse(String tmxXml, Map<Integer, String> gidToSprite, String compositionJson, boolean torus) {
         try {
             TmxMap tmxMap = xmlMapper.readValue(tmxXml, TmxMap.class);
-            World world = new World(tmxMap.getHeight(), tmxMap.getWidth());
+            World world = new World(tmxMap.getHeight(), tmxMap.getWidth(), torus);
             Layer layer = tmxMap.getLayer();
             if (layer != null && layer.getData() != null) {
                 parseGround(layer, world, gidToSprite);

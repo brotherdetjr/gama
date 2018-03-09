@@ -3,6 +3,7 @@ package brotherdetjr.gama;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static java.lang.Math.abs;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.emptyMap;
 
@@ -11,13 +12,15 @@ public final class World {
     private final int height;
     private final int width;
     private final Map<Integer, Item>[] items;
+    private final boolean torus;
 
-    public World(int height, int width) {
+    public World(int height, int width, boolean torus) {
         this.height = height;
         this.width = width;
         //noinspection unchecked
         items = new Map[height * width];
         setAll(items, ignore -> newHashMap());
+        this.torus = torus;
     }
 
     public void attach(Item item) {
@@ -29,15 +32,19 @@ public final class World {
     }
 
     public Map<Integer, Item> getAt(int row, int column) {
-        if (embraces(row, column)) {
-            return items[row * width + column];
+        if (torus) {
+            return items[abs(row % height) * width + abs(column % width)];
         } else {
-            return emptyMap();
+            if (embraces(row, column)) {
+                return items[row * width + column];
+            } else {
+                return emptyMap();
+            }
         }
     }
 
     public boolean embraces(int row, int column) {
-        return row >= 0 && row < height && column >= 0 && column < width;
+        return torus || row >= 0 && row < height && column >= 0 && column < width;
     }
 
     public int getHeight() {
@@ -46,5 +53,9 @@ public final class World {
 
     public int getWidth() {
         return width;
+    }
+
+    public boolean isTorus() {
+        return torus;
     }
 }

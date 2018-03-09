@@ -41,12 +41,13 @@ public final class App {
         World world = WorldParser.parse(
                 asString("map.tmx"),
                 gidToSprite,
-                asString("static/composition.json")
+                asString("static/composition.json"),
+                true
         );
-        PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world, true);
+        PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world);
         PropelledItem bant = newPropelledItem("bant", true).place(31, 17, 100).pointTo(UP);
         world.attach(bant);
-        Renderer renderer = new Renderer(7, 7, 32, 32, world);
+        Renderer renderer = new Renderer(5, 5, 32, 32, 1, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
