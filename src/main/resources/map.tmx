@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-up" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="140">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-up" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="160">
  <tileset firstgid="1" source="desert.tsx"/>
  <layer name="ground" width="32" height="32" locked="1">
   <data encoding="csv">
@@ -37,7 +37,7 @@
 19,20,19,20,19,20,21,21,19,20,19,21,21,20,19,20,19,20,19,20,19,20,19,20,21,20,19,20,19,20,19,20
 </data>
  </layer>
- <objectgroup name="objects" locked="1">
+ <objectgroup name="objects">
   <object id="48" type="item" gid="15" x="352" y="32" width="32" height="32">
    <properties>
     <property name="obstacle" type="bool" value="true"/>
@@ -164,13 +164,13 @@
     <property name="sprite" value="cactus_tall"/>
    </properties>
   </object>
-  <object id="73" type="item" gid="22" x="224" y="64" width="32" height="32">
+  <object id="73" type="item" gid="22" x="512" y="32" width="32" height="32">
    <properties>
     <property name="obstacle" type="bool" value="true"/>
     <property name="sprite" value="sign"/>
    </properties>
   </object>
-  <object id="75" type="item" gid="22" x="768" y="1024" width="32" height="32">
+  <object id="75" type="item" gid="22" x="576" y="1024" width="32" height="32">
    <properties>
     <property name="obstacle" type="bool" value="true"/>
     <property name="sprite" value="sign"/>
@@ -490,6 +490,108 @@
   <object id="139" type="item" gid="17" x="608" y="480" width="32" height="32">
    <properties>
     <property name="sprite" value="grass_single"/>
+   </properties>
+  </object>
+  <object id="140" type="item" gid="15" x="480" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="141" type="item" gid="15" x="448" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="142" type="item" gid="15" x="416" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="143" type="item" gid="15" x="384" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="144" type="item" gid="15" x="320" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="145" type="item" gid="15" x="288" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="147" type="item" gid="15" x="576" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="149" type="item" gid="15" x="608" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="150" type="item" gid="15" x="640" y="32" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_tall"/>
+   </properties>
+  </object>
+  <object id="152" type="item" gid="14" x="512" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="153" type="item" gid="14" x="480" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="154" type="item" gid="14" x="448" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="155" type="item" gid="14" x="416" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="156" type="item" gid="14" x="384" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="157" type="item" gid="14" x="608" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="158" type="item" gid="14" x="640" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
+   </properties>
+  </object>
+  <object id="159" type="item" gid="14" x="672" y="1024" width="32" height="32">
+   <properties>
+    <property name="obstacle" type="bool" value="true"/>
+    <property name="sprite" value="cactus_round"/>
    </properties>
   </object>
  </objectgroup>

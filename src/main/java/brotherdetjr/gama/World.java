@@ -3,7 +3,6 @@ package brotherdetjr.gama;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static java.lang.Math.abs;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.emptyMap;
 
@@ -32,14 +31,10 @@ public final class World {
     }
 
     public Map<Integer, Item> getAt(int row, int column) {
-        if (torus) {
-            return items[abs(row % height) * width + abs(column % width)];
+        if (embraces(row, column)) {
+            return items[torify(row, height) * width + torify(column, width)];
         } else {
-            if (embraces(row, column)) {
-                return items[row * width + column];
-            } else {
-                return emptyMap();
-            }
+            return emptyMap();
         }
     }
 
@@ -57,5 +52,9 @@ public final class World {
 
     public boolean isTorus() {
         return torus;
+    }
+
+    public static int torify(int value, int period) {
+        return (period + value % period) % period;
     }
 }
