@@ -33,4 +33,8 @@ public final class CellEntry {
     public List<Transformation<?>> getFilters() {
         return filters;
     }
+
+    public int getzIndex() {
+        return zIndex;
+    }
 }

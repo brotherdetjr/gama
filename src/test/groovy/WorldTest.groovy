@@ -1,7 +1,7 @@
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static brotherdetjr.gama.World.torify
+import static brotherdetjr.gama.WorldImpl.torify
 
 
 class WorldTest extends Specification {

@@ -2,59 +2,18 @@ package brotherdetjr.gama;
 
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static java.util.Arrays.setAll;
-import static java.util.Collections.emptyMap;
+public interface World {
+    void attach(Item item);
 
-public final class World {
+    void detach(Item item);
 
-    private final int height;
-    private final int width;
-    private final Map<Integer, Item>[] items;
-    private final boolean torus;
+    Map<Integer, Item> getAt(int row, int column);
 
-    public World(int height, int width, boolean torus) {
-        this.height = height;
-        this.width = width;
-        //noinspection unchecked
-        items = new Map[height * width];
-        setAll(items, ignore -> newHashMap());
-        this.torus = torus;
-    }
+    boolean embraces(int row, int column);
 
-    public void attach(Item item) {
-        getAt(item.getRow(), item.getColumn()).put(item.getzIndex(), item);
-    }
+    int getHeight();
 
-    public void detach(Item item) {
-        getAt(item.getRow(), item.getColumn()).remove(item.getzIndex());
-    }
+    int getWidth();
 
-    public Map<Integer, Item> getAt(int row, int column) {
-        if (embraces(row, column)) {
-            return items[torify(row, height) * width + torify(column, width)];
-        } else {
-            return emptyMap();
-        }
-    }
-
-    public boolean embraces(int row, int column) {
-        return torus || row >= 0 && row < height && column >= 0 && column < width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public boolean isTorus() {
-        return torus;
-    }
-
-    public static int torify(int value, int period) {
-        return (period + value % period) % period;
-    }
+    boolean isTorus();
 }

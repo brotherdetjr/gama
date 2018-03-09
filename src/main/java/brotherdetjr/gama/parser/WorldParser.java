@@ -5,6 +5,7 @@ import brotherdetjr.gama.DirectionalItem;
 import brotherdetjr.gama.Item;
 import brotherdetjr.gama.PropelledItem;
 import brotherdetjr.gama.World;
+import brotherdetjr.gama.WorldImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -31,7 +32,7 @@ public final class WorldParser {
     public static World parse(String tmxXml, Map<Integer, String> gidToSprite, String compositionJson, boolean torus) {
         try {
             TmxMap tmxMap = xmlMapper.readValue(tmxXml, TmxMap.class);
-            World world = new World(tmxMap.getHeight(), tmxMap.getWidth(), torus);
+            WorldImpl world = new WorldImpl(tmxMap.getHeight(), tmxMap.getWidth(), torus);
             Layer layer = tmxMap.getLayer();
             if (layer != null && layer.getData() != null) {
                 parseGround(layer, world, gidToSprite);
