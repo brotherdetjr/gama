@@ -27,15 +27,15 @@ public final class Renderer {
         this.world = world;
     }
 
-    public List<List<List<CellEntry>>> render(PropelledItem propelledItem) {
+    public List<List<List<CellEntry>>> render(PropelledItem povItem) {
         List<List<List<CellEntry>>> result = newArrayList();
         int halfHeight = screenHeight / 2;
-        int row = propelledItem.getRow();
+        int row = povItem.getRow();
         for (int r = row - halfHeight - border; r <= row + halfHeight + border; r++) {
             ArrayList<List<CellEntry>> rowCells = newArrayList();
             result.add(rowCells);
             int halfWidth = screenWidth / 2;
-            int column = propelledItem.getColumn();
+            int column = povItem.getColumn();
             for (int c = column - halfWidth - border; c <= column + halfWidth + border; c++) {
                 List<CellEntry> cell = world.getAt(r, c)
                         .values()
@@ -46,13 +46,26 @@ public final class Renderer {
                             List<Transformation<?>> filters = newArrayList();
                             if (item instanceof DirectionalItem) {
                                 DirectionalItem directionalItem = (DirectionalItem) item;
+                                Direction direction = directionalItem.getDirection();
                                 if (item instanceof PropelledItem) {
-                                    sprite += "_" + (((PropelledItem) item).isJustMoved() ? "move" : "idle");
+                                    sprite += "_";
+                                    if (((PropelledItem) item).isJustMoved()) {
+                                        sprite += "move";
+                                        if (item != povItem) {
+                                            ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                                    direction.getOpposite().toString().toLowerCase(),
+                                                    distancePx(direction)
+                                            );
+                                            filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                        }
+                                    } else {
+                                        sprite += "idle";
+                                    }
                                 }
-                                sprite += "_" + directionalItem.getDirection().name().toLowerCase();
+                                sprite += "_" + direction.name().toLowerCase();
                             }
-                            if (propelledItem.isJustMoved() && item != propelledItem) {
-                                Direction direction = propelledItem.getDirection();
+                            if (povItem.isJustMoved() && item != povItem) {
+                                Direction direction = povItem.getDirection();
                                 MoveTransitionParams moveParams = new MoveTransitionParams(
                                         direction.getOpposite().toString().toLowerCase(),
                                         distancePx(direction),
