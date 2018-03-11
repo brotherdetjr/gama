@@ -1,4 +1,5 @@
-import pixoterm from 'https://brotherdetjr-time.firebaseapp.com/pixoterm.js'
+//import pixoterm from 'https://brotherdetjr-time.firebaseapp.com/pixoterm.js'
+import pixoterm from './pixoterm.js'
 
 pixoterm(
     {

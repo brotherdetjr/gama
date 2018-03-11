@@ -1,6 +1,5 @@
 package brotherdetjr.gama;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static brotherdetjr.gama.Direction.DOWN;
@@ -9,7 +8,6 @@ import static brotherdetjr.gama.Direction.RIGHT;
 import static brotherdetjr.gama.Direction.UP;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.abs;
-import static java.util.stream.Collectors.toList;
 
 public final class Renderer {
 
@@ -32,20 +30,19 @@ public final class Renderer {
         this.world = world;
     }
 
-    public List<List<List<CellEntry>>> render(PropelledItem povItem) {
-        List<List<List<CellEntry>>> result = newArrayList();
+    public List<CellEntry> render(PropelledItem povItem) {
+        List<CellEntry> result = newArrayList();
         int halfHeight = screenHeight / 2;
         int row = povItem.getRow();
         for (int r = row - halfHeight - border; r <= row + halfHeight + border; r++) {
-            ArrayList<List<CellEntry>> rowCells = newArrayList();
-            result.add(rowCells);
             int halfWidth = screenWidth / 2;
             int column = povItem.getColumn();
             for (int c = column - halfWidth - border; c <= column + halfWidth + border; c++) {
-                List<CellEntry> cell = world.getAt(r, c)
+                int r1 = r;
+                int c1 = c;
+                world.getAt(r, c)
                         .values()
-                        .stream()
-                        .map(item -> {
+                        .forEach(item -> {
                             String sprite = item.getSprite();
                             List<Transformation<?>> transitions = newArrayList();
                             List<Transformation<?>> filters = newArrayList();
@@ -112,9 +109,8 @@ public final class Renderer {
                                     );
                                 }
                             }
-                            return new CellEntry(sprite, transitions, filters, item.getzIndex());
-                        }).collect(toList());
-                rowCells.add(cell);
+                            result.add(new CellEntry(r1 - row + halfHeight, c1 - column + halfWidth, sprite, transitions, filters, item.getzIndex()));
+                        });
             }
         }
         return result;
