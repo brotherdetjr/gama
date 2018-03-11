@@ -33,29 +33,29 @@ class RendererTest extends Specification {
         assertLenientEquals(
                 [
                         [
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0)],
+                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
                                 [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0),
-                                        new CellEntry('rock', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 1)
+                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
+                                        new CellEntry('rock', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 1)
                                 ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0)]
+                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)]
                         ],
                         [
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0)],
+                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
                                 [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0),
+                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
                                         new CellEntry('pov_move_up', [], [], 100)
                                 ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0)]
+                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)]
                         ],
                         [
                                 [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0),
+                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
                                         new CellEntry('boy_move_down', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100)
                                 ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0)],
+                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
                                 [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 0),
+                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
                                         new CellEntry('girl_move_up', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 100)
                                 ]
                         ]

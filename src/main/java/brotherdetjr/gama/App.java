@@ -50,6 +50,7 @@ public final class App {
         Renderer renderer = new Renderer(5, 5, 32, 32, 1, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
+        Random random = new Random();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
                     sessions.forEach((token, session) -> {
                         try {
@@ -67,7 +68,7 @@ public final class App {
                             throw new RuntimeException(e);
                         }
                     });
-                    propelledItemMoveHandler.accept(bant, new MoveRequest(UP));
+                    propelledItemMoveHandler.accept(bant, new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]));
                 },
                 framePeriodInMillis,
                 framePeriodInMillis,

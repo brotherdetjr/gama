@@ -57,31 +57,31 @@ public final class Renderer {
                                     PropelledItem propelledItem = (PropelledItem) item;
                                     if (propelledItem.isJustMoved()) {
                                         sprite += "move";
-                                        if (item != povItem) {
-                                            int verticalShift = verticalVelocity(povItem) - verticalVelocity(propelledItem);
-                                            if (verticalShift != 0) {
-                                                Direction verticalDirection = verticalShift > 0 ? DOWN : UP;
-                                                ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                                        verticalDirection.name().toLowerCase(),
-                                                        abs(verticalShift) * spriteHeightPx
-                                                );
-                                                filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                            }
-                                            int horizontalShift = horizontalVelocity(povItem) - horizontalVelocity(propelledItem);
-                                            if (horizontalShift != 0) {
-                                                Direction horizontalDirection = horizontalShift > 0 ? RIGHT : LEFT;
-                                                ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                                        horizontalDirection.name().toLowerCase(),
-                                                        abs(horizontalShift) * spriteWidthPx
-                                                );
-                                                filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                            }
-                                        }
                                     } else {
                                         sprite += "idle";
                                     }
                                 }
                                 sprite += "_" + direction.name().toLowerCase();
+                            }
+                            if (item != povItem) {
+                                int verticalShift = verticalVelocity(povItem) - verticalVelocity(item);
+                                if (verticalShift != 0) {
+                                    Direction verticalDirection = verticalShift > 0 ? DOWN : UP;
+                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                            verticalDirection.name().toLowerCase(),
+                                            abs(verticalShift) * spriteHeightPx
+                                    );
+                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                }
+                                int horizontalShift = horizontalVelocity(povItem) - horizontalVelocity(item);
+                                if (horizontalShift != 0) {
+                                    Direction horizontalDirection = horizontalShift > 0 ? RIGHT : LEFT;
+                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                            horizontalDirection.name().toLowerCase(),
+                                            abs(horizontalShift) * spriteWidthPx
+                                    );
+                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                }
                             }
                             if (povItem.isJustMoved() && item != povItem) {
                                 Direction direction = povItem.getDirection();
@@ -106,21 +106,26 @@ public final class Renderer {
         return result;
     }
 
-    private int verticalVelocity(PropelledItem item) {
+    private int verticalVelocity(Item item) {
         return velocity(item, DOWN);
     }
 
-    private int horizontalVelocity(PropelledItem item) {
+    private int horizontalVelocity(Item item) {
         return velocity(item, RIGHT);
     }
 
-    private int velocity(PropelledItem item, Direction positiveDirection) {
-        if (!item.isJustMoved()) {
-            return 0;
-        } else if (item.getDirection() == positiveDirection) {
-            return 1;
-        } else if (item.getDirection() == positiveDirection.getOpposite()) {
-            return -1;
+    private int velocity(Item item, Direction positiveDirection) {
+        if (item instanceof PropelledItem) {
+            PropelledItem pi = (PropelledItem) item;
+            if (!pi.isJustMoved()) {
+                return 0;
+            } else if (pi.getDirection() == positiveDirection) {
+                return 1;
+            } else if (pi.getDirection() == positiveDirection.getOpposite()) {
+                return -1;
+            } else {
+                return 0;
+            }
         } else {
             return 0;
         }
