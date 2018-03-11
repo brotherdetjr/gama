@@ -1,10 +1,14 @@
 package brotherdetjr.gama;
 
+import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.setAll;
+import static java.util.Arrays.stream;
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toList;
 
 public final class WorldImpl implements World {
 
@@ -24,16 +28,12 @@ public final class WorldImpl implements World {
 
     @Override
     public void attach(Item item) {
-        int row = item.getRow();
-        int column = item.getColumn();
-        getAt(row, column).put(item.getzIndex(), item);
+        getAt(item.getRow(), item.getColumn()).put(item.getzIndex(), item);
     }
 
     @Override
     public void detach(Item item) {
-        int row = item.getRow();
-        int column = item.getColumn();
-        getAt(row, column).remove(item.getzIndex());
+        getAt(item.getRow(), item.getColumn()).remove(item.getzIndex());
     }
 
     @Override
@@ -71,8 +71,13 @@ public final class WorldImpl implements World {
     }
 
     @Override
-    public Map.Entry<Integer, Integer> nthFreeCell(int n) {
-        throw new UnsupportedOperationException();
+    public Map.Entry<Integer, Integer> nthFreeCellRowColumn(int n) {
+        // TODO can be seriously optimized and work even for totally empty cells
+        List<Map<Integer, Item>> freeCells = stream(items)
+                .filter(cell -> cell.values().stream().noneMatch(Item::isObstacle))
+                .collect(toList());
+        Item it = freeCells.get(n % freeCells.size()).get(0);
+        return new AbstractMap.SimpleEntry<>(it.getRow(), it.getColumn());
     }
 
     public static int torify(int value, int period) {

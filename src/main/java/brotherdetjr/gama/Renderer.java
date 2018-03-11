@@ -51,7 +51,6 @@ public final class Renderer {
                             List<Transformation<?>> filters = newArrayList();
                             if (item instanceof DirectionalItem) {
                                 DirectionalItem directionalItem = (DirectionalItem) item;
-                                Direction direction = directionalItem.getDirection();
                                 if (item instanceof PropelledItem) {
                                     sprite += "_";
                                     PropelledItem propelledItem = (PropelledItem) item;
@@ -61,7 +60,7 @@ public final class Renderer {
                                         sprite += "idle";
                                     }
                                 }
-                                sprite += "_" + direction.name().toLowerCase();
+                                sprite += "_" + directionalItem.getDirection().name().toLowerCase();
                             }
                             if (item != povItem) {
                                 int verticalShift = verticalVelocity(povItem) - verticalVelocity(item);
@@ -83,20 +82,35 @@ public final class Renderer {
                                     filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
                                 }
                             }
-                            if (povItem.isJustMoved() && item != povItem) {
-                                Direction direction = povItem.getDirection();
-                                int velocity = abs(direction.isVertical() ? verticalVelocity(povItem) : horizontalVelocity(povItem));
-                                MoveTransitionParams moveParams = new MoveTransitionParams(
-                                        direction.getOpposite().name().toLowerCase(),
-                                        velocity * (direction.isVertical() ? spriteHeightPx : spriteWidthPx),
-                                        velocity * 2 // TODO
-                                );
-                                transitions.add(
-                                        new Transformation<>(
-                                                MoveTransitionParams.TRANSITION_NAME,
-                                                moveParams
-                                        )
-                                );
+                            if (item != povItem) {
+                                int verticalVelocity = verticalVelocity(item) - verticalVelocity(povItem);
+                                if (verticalVelocity != 0) {
+                                    MoveTransitionParams moveParams = new MoveTransitionParams(
+                                            (verticalVelocity > 0 ? DOWN : UP).name().toLowerCase(),
+                                            abs(verticalVelocity) * spriteHeightPx,
+                                            abs(verticalVelocity) * 2 // TODO
+                                    );
+                                    transitions.add(
+                                            new Transformation<>(
+                                                    MoveTransitionParams.TRANSITION_NAME,
+                                                    moveParams
+                                            )
+                                    );
+                                }
+                                int horizontalVelocity = horizontalVelocity(item) - horizontalVelocity(povItem);
+                                if (horizontalVelocity != 0) {
+                                    MoveTransitionParams moveParams = new MoveTransitionParams(
+                                            (horizontalVelocity > 0 ? RIGHT : LEFT).name().toLowerCase(),
+                                            abs(horizontalVelocity) * spriteWidthPx,
+                                            abs(horizontalVelocity) * 2 // TODO
+                                    );
+                                    transitions.add(
+                                            new Transformation<>(
+                                                    MoveTransitionParams.TRANSITION_NAME,
+                                                    moveParams
+                                            )
+                                    );
+                                }
                             }
                             return new CellEntry(sprite, transitions, filters, item.getzIndex());
                         }).collect(toList());

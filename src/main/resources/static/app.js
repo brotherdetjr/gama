@@ -2,6 +2,7 @@ import pixoterm from 'https://brotherdetjr-time.firebaseapp.com/pixoterm.js'
 
 pixoterm(
     {
+        outerInSprites: 2,
         screenWidthInSprites: 5,
         screenHeightInSprites: 5,
         spritePack: 'sprites.json',

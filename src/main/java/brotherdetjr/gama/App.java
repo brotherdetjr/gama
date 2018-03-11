@@ -10,20 +10,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import static brotherdetjr.gama.Direction.UP;
+import static brotherdetjr.gama.Direction.DOWN;
 import static brotherdetjr.gama.PropelledItem.newPropelledItem;
 import static brotherdetjr.gama.ResourceUtils.asString;
 import static brotherdetjr.gama.UserRole.PLAYER;
 import static com.google.common.collect.ImmutableSet.copyOf;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
 import static com.google.common.collect.Sets.intersection;
 import static io.javalin.ApiBuilder.get;
 import static io.javalin.security.Role.roles;
+import static java.lang.Math.abs;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -45,12 +48,18 @@ public final class App {
                 true
         );
         PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world);
-        PropelledItem bant = newPropelledItem("bant", true).place(31, 17, 100).pointTo(UP);
-        world.attach(bant);
-        Renderer renderer = new Renderer(5, 5, 32, 32, 1, world);
+        List<PropelledItem> bants = newArrayList();
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            Map.Entry<Integer, Integer> rc = world.nthFreeCellRowColumn(abs(random.nextInt()));
+            PropelledItem it = newPropelledItem("bant", true).place(rc.getKey(), rc.getValue(), 100).pointTo(DOWN);
+            bants.add(it);
+            world.attach(it);
+        }
+        PropelledItem bant = bants.get(0);
+        Renderer renderer = new Renderer(5, 5, 32, 32, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
-        Random random = new Random();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
                     sessions.forEach((token, session) -> {
                         try {
@@ -68,7 +77,9 @@ public final class App {
                             throw new RuntimeException(e);
                         }
                     });
-                    propelledItemMoveHandler.accept(bant, new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]));
+                    for (PropelledItem it : bants) {
+                        propelledItemMoveHandler.accept(it, new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]));
+                    }
                 },
                 framePeriodInMillis,
                 framePeriodInMillis,

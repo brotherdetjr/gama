@@ -19,5 +19,5 @@ public interface World {
 
     boolean isOccupied(int row, int column);
 
-    Map.Entry<Integer, Integer> nthFreeCell(int n);
+    Map.Entry<Integer, Integer> nthFreeCellRowColumn(int n);
 }
