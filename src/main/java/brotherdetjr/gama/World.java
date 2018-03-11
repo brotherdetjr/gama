@@ -16,4 +16,8 @@ public interface World {
     int getWidth();
 
     boolean isTorus();
+
+    boolean isOccupied(int row, int column);
+
+    Map.Entry<Integer, Integer> nthFreeCell(int n);
 }

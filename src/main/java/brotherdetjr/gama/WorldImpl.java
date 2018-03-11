@@ -24,18 +24,22 @@ public final class WorldImpl implements World {
 
     @Override
     public void attach(Item item) {
-        getAt(item.getRow(), item.getColumn()).put(item.getzIndex(), item);
+        int row = item.getRow();
+        int column = item.getColumn();
+        getAt(row, column).put(item.getzIndex(), item);
     }
 
     @Override
     public void detach(Item item) {
-        getAt(item.getRow(), item.getColumn()).remove(item.getzIndex());
+        int row = item.getRow();
+        int column = item.getColumn();
+        getAt(row, column).remove(item.getzIndex());
     }
 
     @Override
     public Map<Integer, Item> getAt(int row, int column) {
         if (embraces(row, column)) {
-            return items[torify(row, height) * width + torify(column, width)];
+            return items[toLinearIndex(row, column)];
         } else {
             return emptyMap();
         }
@@ -61,7 +65,21 @@ public final class WorldImpl implements World {
         return torus;
     }
 
+    @Override
+    public boolean isOccupied(int row, int column) {
+        return getAt(row, column).values().stream().anyMatch(Item::isObstacle);
+    }
+
+    @Override
+    public Map.Entry<Integer, Integer> nthFreeCell(int n) {
+        throw new UnsupportedOperationException();
+    }
+
     public static int torify(int value, int period) {
         return (period + value % period) % period;
+    }
+
+    private int toLinearIndex(int row, int column) {
+        return torify(row, height) * width + torify(column, width);
     }
 }

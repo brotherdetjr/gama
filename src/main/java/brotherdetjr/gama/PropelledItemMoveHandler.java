@@ -20,7 +20,7 @@ public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem,
             case LEFT: c--; break;
             case RIGHT: c++;
         }
-        if (world.embraces(r, c) && world.getAt(r, c).values().stream().noneMatch(Item::isObstacle)) {
+        if (world.embraces(r, c) && !world.isOccupied(r, c)) {
             world.detach(propelledItem);
             propelledItem.place(r, c);
             world.attach(propelledItem);
