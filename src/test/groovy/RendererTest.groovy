@@ -29,35 +29,26 @@ class RendererTest extends Specification {
         }
         def renderer = new Renderer(1, 1, 32, 32, 1, world)
         def renderedView = renderer.render(povItem)
+        def shift = new Transformation<>('shift', new ShiftFilterParams('up', 32))
+        def move = new Transformation<>('move', new MoveTransitionParams('down', 32, 2))
+        def ground = new CellEntry('ground', [move], [shift], 0)
         expect:
         assertLenientEquals(
                 [
                         [
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
-                                [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
-                                        new CellEntry('rock', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 1)
-                                ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)]
+                                [ground],
+                                [ground, new CellEntry('rock', [move], [shift], 1)],
+                                [ground]
                         ],
                         [
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
-                                [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
-                                        new CellEntry('pov_move_up', [], [], 100)
-                                ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)]
+                                [ground],
+                                [ground, new CellEntry('pov_move_up', [], [], 100)],
+                                [ground]
                         ],
                         [
-                                [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
-                                        new CellEntry('boy_move_down', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100)
-                                ],
-                                [new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0)],
-                                [
-                                        new CellEntry('ground', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [new Transformation<>('shift', new ShiftFilterParams('up', 32))], 0),
-                                        new CellEntry('girl_move_up', [new Transformation<>('move', new MoveTransitionParams('down', 32, 2))], [], 100)
-                                ]
+                                [ground, new CellEntry('boy_move_down', [move], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100)],
+                                [ground],
+                                [ground, new CellEntry('girl_move_up', [move], [], 100)]
                         ]
                 ],
                 renderedView
