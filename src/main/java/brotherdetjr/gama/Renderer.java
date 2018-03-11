@@ -3,7 +3,12 @@ package brotherdetjr.gama;
 import java.util.ArrayList;
 import java.util.List;
 
+import static brotherdetjr.gama.Direction.DOWN;
+import static brotherdetjr.gama.Direction.LEFT;
+import static brotherdetjr.gama.Direction.RIGHT;
+import static brotherdetjr.gama.Direction.UP;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.Math.abs;
 import static java.util.stream.Collectors.toList;
 
 public final class Renderer {
@@ -49,14 +54,28 @@ public final class Renderer {
                                 Direction direction = directionalItem.getDirection();
                                 if (item instanceof PropelledItem) {
                                     sprite += "_";
-                                    if (((PropelledItem) item).isJustMoved()) {
+                                    PropelledItem propelledItem = (PropelledItem) item;
+                                    if (propelledItem.isJustMoved()) {
                                         sprite += "move";
                                         if (item != povItem) {
-                                            ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                                    direction.getOpposite().toString().toLowerCase(),
-                                                    distancePx(direction)
-                                            );
-                                            filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                            int verticalShift = verticalVelocity(povItem) - verticalVelocity(propelledItem);
+                                            if (verticalShift != 0) {
+                                                Direction verticalDirection = verticalShift > 0 ? DOWN : UP;
+                                                ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                                        verticalDirection.name().toLowerCase(),
+                                                        abs(verticalShift) * spriteHeightPx
+                                                );
+                                                filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                            }
+                                            int horizontalShift = horizontalVelocity(povItem) - horizontalVelocity(propelledItem);
+                                            if (horizontalShift != 0) {
+                                                Direction horizontalDirection = horizontalShift > 0 ? RIGHT : LEFT;
+                                                ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                                        horizontalDirection.name().toLowerCase(),
+                                                        abs(horizontalShift) * spriteWidthPx
+                                                );
+                                                filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
+                                            }
                                         }
                                     } else {
                                         sprite += "idle";
@@ -66,10 +85,11 @@ public final class Renderer {
                             }
                             if (povItem.isJustMoved() && item != povItem) {
                                 Direction direction = povItem.getDirection();
+                                int velocity = abs(direction.isVertical() ? verticalVelocity(povItem) : horizontalVelocity(povItem));
                                 MoveTransitionParams moveParams = new MoveTransitionParams(
-                                        direction.getOpposite().toString().toLowerCase(),
-                                        distancePx(direction),
-                                        2 // TODO
+                                        direction.getOpposite().name().toLowerCase(),
+                                        velocity * (direction.isVertical() ? spriteHeightPx : spriteWidthPx),
+                                        velocity * 2 // TODO
                                 );
                                 transitions.add(
                                         new Transformation<>(
@@ -86,7 +106,23 @@ public final class Renderer {
         return result;
     }
 
-    private int distancePx(Direction direction) {
-        return direction.isVertical() ? spriteHeightPx : spriteWidthPx;
+    private int verticalVelocity(PropelledItem item) {
+        return velocity(item, DOWN);
+    }
+
+    private int horizontalVelocity(PropelledItem item) {
+        return velocity(item, RIGHT);
+    }
+
+    private int velocity(PropelledItem item, Direction positiveDirection) {
+        if (!item.isJustMoved()) {
+            return 0;
+        } else if (item.getDirection() == positiveDirection) {
+            return 1;
+        } else if (item.getDirection() == positiveDirection.getOpposite()) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }
