@@ -3,8 +3,8 @@ import pixoterm from 'https://brotherdetjr-time.firebaseapp.com/pixoterm.js'
 pixoterm(
     {
         outerInSprites: 2,
-        screenWidthInSprites: 5,
-        screenHeightInSprites: 5,
+        screenWidthInSprites: 9,
+        screenHeightInSprites: 9,
         spritePack: 'sprites.json',
         spriteComposition: 'composition.json'
     },

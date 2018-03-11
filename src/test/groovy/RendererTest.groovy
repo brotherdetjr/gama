@@ -46,9 +46,9 @@ class RendererTest extends Specification {
                                 [ground]
                         ],
                         [
-                                [ground, new CellEntry('boy_move_down', [move], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100)],
+                                [ground, new CellEntry('boy_move_down', [new Transformation<>('move', new MoveTransitionParams('down', 64, 4))], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100)],
                                 [ground],
-                                [ground, new CellEntry('girl_move_up', [move], [], 100)]
+                                [ground, new CellEntry('girl_move_up', [], [], 100)]
                         ]
                 ],
                 renderedView

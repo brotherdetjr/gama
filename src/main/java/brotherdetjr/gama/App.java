@@ -50,14 +50,14 @@ public final class App {
         PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world);
         List<PropelledItem> bants = newArrayList();
         Random random = new Random();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
             Map.Entry<Integer, Integer> rc = world.nthFreeCellRowColumn(abs(random.nextInt()));
             PropelledItem it = newPropelledItem("bant", true).place(rc.getKey(), rc.getValue(), 100).pointTo(DOWN);
             bants.add(it);
             world.attach(it);
         }
         PropelledItem bant = bants.get(0);
-        Renderer renderer = new Renderer(5, 5, 32, 32, 2, world);
+        Renderer renderer = new Renderer(9, 9, 32, 32, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
