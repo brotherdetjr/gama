@@ -98,10 +98,14 @@ export const transitions = {
         "constructor": (sprite, params) => {
             const obj = new Object();
             obj.pos = 0;
+            obj.absStepPx = Math.abs(params.stepPx);
+            obj.absDistancePx = Math.abs(params.distancePx);
+            obj.sign = Math.sign(params.stepPx);
             return obj;
         },
         "mutator": (sprite, params, state) => {
-            const step = Math.min(params.stepPx, params.distancePx - state.pos);
+            const absStep = Math.min(state.absStepPx, state.absDistancePx - state.pos);
+            const step = absStep * state.sign;
             if (params.direction == 'left') {
                 sprite.x -= step;
             } else if (params.direction == 'right') {
@@ -111,8 +115,8 @@ export const transitions = {
             } else if (params.direction == 'down') {
                 sprite.y += step;
             }
-            state.pos += step;
-            return state.pos < params.distancePx;
+            state.pos += absStep;
+            return state.pos < state.absDistancePx;
         }
     }
 };

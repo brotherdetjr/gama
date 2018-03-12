@@ -7,7 +7,6 @@ import static brotherdetjr.gama.Direction.LEFT;
 import static brotherdetjr.gama.Direction.RIGHT;
 import static brotherdetjr.gama.Direction.UP;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Math.abs;
 
 public final class Renderer {
 
@@ -60,32 +59,12 @@ public final class Renderer {
                                 sprite += "_" + directionalItem.getDirection().name().toLowerCase();
                             }
                             if (item != povItem) {
-                                int verticalShift = verticalVelocity(povItem) - verticalVelocity(item);
-                                if (verticalShift != 0) {
-                                    Direction verticalDirection = verticalShift > 0 ? DOWN : UP;
-                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                            verticalDirection.name().toLowerCase(),
-                                            abs(verticalShift) * spriteHeightPx
-                                    );
-                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                }
-                                int horizontalShift = horizontalVelocity(povItem) - horizontalVelocity(item);
-                                if (horizontalShift != 0) {
-                                    Direction horizontalDirection = horizontalShift > 0 ? RIGHT : LEFT;
-                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                            horizontalDirection.name().toLowerCase(),
-                                            abs(horizontalShift) * spriteWidthPx
-                                    );
-                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                }
-                            }
-                            if (item != povItem) {
                                 int verticalVelocity = verticalVelocity(item) - verticalVelocity(povItem);
                                 if (verticalVelocity != 0) {
                                     MoveTransitionParams moveParams = new MoveTransitionParams(
-                                            (verticalVelocity > 0 ? DOWN : UP).name().toLowerCase(),
-                                            abs(verticalVelocity) * spriteHeightPx,
-                                            abs(verticalVelocity) * 2 // TODO
+                                            DOWN.name().toLowerCase(),
+                                            verticalVelocity * spriteHeightPx,
+                                            verticalVelocity * 2 // TODO
                                     );
                                     transitions.add(
                                             new Transformation<>(
@@ -93,13 +72,18 @@ public final class Renderer {
                                                     moveParams
                                             )
                                     );
+                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                            UP.name().toLowerCase(),
+                                            verticalVelocity * spriteHeightPx
+                                    );
+                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
                                 }
                                 int horizontalVelocity = horizontalVelocity(item) - horizontalVelocity(povItem);
                                 if (horizontalVelocity != 0) {
                                     MoveTransitionParams moveParams = new MoveTransitionParams(
-                                            (horizontalVelocity > 0 ? RIGHT : LEFT).name().toLowerCase(),
-                                            abs(horizontalVelocity) * spriteWidthPx,
-                                            abs(horizontalVelocity) * 2 // TODO
+                                            RIGHT.name().toLowerCase(),
+                                            horizontalVelocity * spriteWidthPx,
+                                            horizontalVelocity * 2 // TODO
                                     );
                                     transitions.add(
                                             new Transformation<>(
@@ -107,6 +91,11 @@ public final class Renderer {
                                                     moveParams
                                             )
                                     );
+                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
+                                            LEFT.name().toLowerCase(),
+                                            horizontalVelocity * spriteWidthPx
+                                    );
+                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
                                 }
                             }
                             result.add(new CellEntry(r1 - row + halfHeight, c1 - column + halfWidth, sprite, transitions, filters, item.getzIndex()));
