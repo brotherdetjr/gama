@@ -51,8 +51,9 @@ public final class App {
         List<PropelledItem> bants = newArrayList();
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            Map.Entry<Integer, Integer> rc = world.nthFreeCellRowColumn(abs(random.nextInt()));
-            PropelledItem it = newPropelledItem("bant", true).place(rc.getKey(), rc.getValue(), 100).pointTo(DOWN);
+            int idx = world.nthFreeCellIndex(abs(random.nextInt()));
+            PropelledItem it = newPropelledItem("bant", true)
+                    .place(world.indexToRow(idx), world.indexToColumn(idx), 100).pointTo(DOWN);
             bants.add(it);
             world.attach(it);
         }
@@ -80,7 +81,8 @@ public final class App {
                         }
                     });
                     for (PropelledItem it : bants) {
-                        propelledItemMoveHandler.accept(it, new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]));
+                        MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
+                        propelledItemMoveHandler.accept(it, r);
                     }
                 },
                 framePeriodInMillis,

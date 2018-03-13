@@ -1,48 +1,64 @@
 package brotherdetjr.gama;
 
-import java.util.AbstractMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.setAll;
-import static java.util.Arrays.stream;
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.toList;
 
 public final class WorldImpl implements World {
 
     private final int height;
     private final int width;
-    private final Map<Integer, Item>[] items;
+    private final Cell[] cells;
     private final boolean torus;
+    private int freeCellCount;
 
     public WorldImpl(int height, int width, boolean torus) {
         this.height = height;
         this.width = width;
-        //noinspection unchecked
-        items = new Map[height * width];
-        setAll(items, ignore -> newHashMap());
+        cells = new Cell[height * width];
+        setAll(cells, ignore -> new Cell());
         this.torus = torus;
+        freeCellCount = height * width;
     }
 
     @Override
     public void attach(Item item) {
-        getAt(item.getRow(), item.getColumn()).put(item.getzIndex(), item);
+        Cell cell = getCell(item.getRow(), item.getColumn());
+        if (cell != null) {
+            cell.items.put(item.getzIndex(), item);
+            if (item.isObstacle()) {
+                cell.obstacleCount++;
+                if (cell.obstacleCount == 1) {
+                    freeCellCount--;
+                }
+            }
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
     public void detach(Item item) {
-        getAt(item.getRow(), item.getColumn()).remove(item.getzIndex());
+        Cell cell = getCell(item.getRow(), item.getColumn());
+        if (cell != null) {
+            cell.items.remove(item.getzIndex(), item);
+            if (item.isObstacle()) {
+                cell.obstacleCount--;
+                if (cell.obstacleCount == 0) {
+                    freeCellCount++;
+                }
+            }
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
     public Map<Integer, Item> getAt(int row, int column) {
-        if (embraces(row, column)) {
-            return items[toLinearIndex(row, column)];
-        } else {
-            return emptyMap();
-        }
+        Cell cell = getCell(row, column);
+        return cell != null ? cell.items : emptyMap();
     }
 
     @Override
@@ -67,24 +83,71 @@ public final class WorldImpl implements World {
 
     @Override
     public boolean isOccupied(int row, int column) {
-        return getAt(row, column).values().stream().anyMatch(Item::isObstacle);
+        Cell cell = getCell(row, column);
+        if (cell != null) {
+            return cell.obstacleCount > 0;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
-    public Map.Entry<Integer, Integer> nthFreeCellRowColumn(int n) {
-        // TODO can be seriously optimized and work even for totally empty cells
-        List<Map<Integer, Item>> freeCells = stream(items)
-                .filter(cell -> cell.values().stream().noneMatch(Item::isObstacle))
-                .collect(toList());
-        Item it = freeCells.get(n % freeCells.size()).get(0);
-        return new AbstractMap.SimpleEntry<>(it.getRow(), it.getColumn());
+    public int nthFreeCellIndex(int n) {
+        if (freeCellCount > 0) {
+            n %= freeCellCount;
+            for (int i = 0, j = 0; i < cells.length; i++) {
+                if (cells[i].obstacleCount == 0) {
+                    j++;
+                }
+                if (j > n) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public static int torify(int value, int period) {
         return (period + value % period) % period;
     }
 
+    @Override
+    public int indexToRow(int index) {
+        checkIndexInBounds(index);
+        return index / width;
+    }
+
+    @Override
+    public int indexToColumn(int index) {
+        checkIndexInBounds(index);
+        return index % width;
+    }
+
+    @Override
+    public int getFreeCellCount() {
+        return freeCellCount;
+    }
+
+    private void checkIndexInBounds(int index) {
+        if (index >= cells.length || index < 0) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private Cell getCell(int row, int column) {
+        if (embraces(row, column)) {
+            return cells[toLinearIndex(row, column)];
+        } else {
+            return null;
+        }
+    }
+
     private int toLinearIndex(int row, int column) {
         return torify(row, height) * width + torify(column, width);
+    }
+
+    private static class Cell {
+        int obstacleCount;
+        Map<Integer, Item> items = newHashMap();
     }
 }
