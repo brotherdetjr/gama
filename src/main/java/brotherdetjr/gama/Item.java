@@ -13,7 +13,7 @@ public class Item<T extends Item> {
     private Integer zIndex;
 
     protected Item(String sprite, boolean obstacle) {
-        this.sprite = sprite;
+        this.sprite = sprite.intern();
         this.obstacle = obstacle;
     }
 

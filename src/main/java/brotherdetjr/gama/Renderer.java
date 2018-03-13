@@ -64,12 +64,10 @@ public final class Renderer {
         if (item instanceof DirectionalItem) {
             DirectionalItem directionalItem = (DirectionalItem) item;
             if (item instanceof PropelledItem) {
-                sprite += "_";
-                PropelledItem propelledItem = (PropelledItem) item;
-                if (propelledItem.isJustMoved()) {
-                    sprite += "move";
+                if (((PropelledItem) item).isJustMoved()) {
+                    sprite += "_move";
                 } else {
-                    sprite += "idle";
+                    sprite += "_idle";
                 }
             }
             sprite += "_" + directionalItem.getDirection().name().toLowerCase();

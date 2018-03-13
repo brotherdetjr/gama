@@ -22,6 +22,7 @@
         <bouncycastle.version>1.59</bouncycastle.version>
         <unitils.version>3.4.6</unitils.version>
         <commons-io.version>2.5</commons-io.version>
+        <metrics.version>4.0.0</metrics.version>
     </properties>
     <build>
         <plugins>
@@ -97,9 +98,15 @@
             <version>${commons-io.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>${groovy.version}</version>
+            <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.spockframework</groupId>
