@@ -1,8 +1,5 @@
 package brotherdetjr.gama;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public final class MoveTransitionParams {
     public static final String TRANSITION_NAME = "move";
 
@@ -10,11 +7,7 @@ public final class MoveTransitionParams {
     private final double distancePx;
     private final double stepPx;
 
-    @JsonCreator
-    public MoveTransitionParams(
-            @JsonProperty("direction") String direction,
-            @JsonProperty("distancePx") double distancePx,
-            @JsonProperty("stepPx") double stepPx) {
+    public MoveTransitionParams(String direction, double distancePx, double stepPx) {
         Direction.parse(direction); // simple validation
         this.direction = direction;
         this.distancePx = distancePx;

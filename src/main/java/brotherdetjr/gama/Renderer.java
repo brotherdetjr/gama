@@ -1,36 +1,31 @@
 package brotherdetjr.gama;
 
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static brotherdetjr.gama.Direction.DOWN;
-import static brotherdetjr.gama.Direction.LEFT;
 import static brotherdetjr.gama.Direction.RIGHT;
-import static brotherdetjr.gama.Direction.UP;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptyList;
 
 public final class Renderer {
 
-    private final int screenHeight;
-    private final int screenWidth;
     private final int spriteHeightPx;
     private final int spriteWidthPx;
-    private final int border;
     private final World world;
 
-    public Renderer(int screenHeight, int screenWidth, int spriteHeightPx, int spriteWidthPx, int border, World world) {
-        if (screenHeight % 2 == 0 || screenWidth % 2 == 0) {
-            throw new IllegalArgumentException("screenHeight and screenWidth should be odd");
-        }
-        this.screenHeight = screenHeight;
-        this.screenWidth = screenWidth;
+    public Renderer(int spriteHeightPx, int spriteWidthPx, World world) {
         this.spriteHeightPx = spriteHeightPx;
         this.spriteWidthPx = spriteWidthPx;
-        this.border = border;
         this.world = world;
     }
 
-    public List<CellEntry> render(PropelledItem povItem) {
-        List<CellEntry> result = newArrayList();
+    public Perception render(PropelledItem povItem, int screenHeight, int screenWidth, int border) {
+        if (screenHeight % 2 == 0 || screenWidth % 2 == 0) {
+            throw new IllegalArgumentException("screenHeight and screenWidth should be odd");
+        }
+        List<CellEntry> cellEntries = newArrayList();
         int halfHeight = screenHeight / 2;
         int row = povItem.getRow();
         for (int r = row - halfHeight - border; r <= row + halfHeight + border; r++) {
@@ -42,78 +37,120 @@ public final class Renderer {
                 world.getAt(r, c)
                         .values()
                         .forEach(item -> {
-                            String sprite = item.getSprite();
-                            List<Transformation<?>> transitions = newArrayList();
-                            List<Transformation<?>> filters = newArrayList();
-                            if (item instanceof DirectionalItem) {
-                                DirectionalItem directionalItem = (DirectionalItem) item;
-                                if (item instanceof PropelledItem) {
-                                    sprite += "_";
-                                    PropelledItem propelledItem = (PropelledItem) item;
-                                    if (propelledItem.isJustMoved()) {
-                                        sprite += "move";
-                                    } else {
-                                        sprite += "idle";
-                                    }
-                                }
-                                sprite += "_" + directionalItem.getDirection().name().toLowerCase();
-                            }
+                            List<? extends Transformation> transitions = emptyList();
+                            List<? extends Transformation> filters = emptyList();
                             if (item != povItem) {
-                                int verticalVelocity = verticalVelocity(item) - verticalVelocity(povItem);
-                                if (verticalVelocity != 0) {
-                                    MoveTransitionParams moveParams = new MoveTransitionParams(
-                                            DOWN.name().toLowerCase(),
-                                            verticalVelocity * spriteHeightPx,
-                                            verticalVelocity * 2 // TODO
-                                    );
-                                    transitions.add(
-                                            new Transformation<>(
-                                                    MoveTransitionParams.TRANSITION_NAME,
-                                                    moveParams
-                                            )
-                                    );
-                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                            UP.name().toLowerCase(),
-                                            verticalVelocity * spriteHeightPx
-                                    );
-                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                }
-                                int horizontalVelocity = horizontalVelocity(item) - horizontalVelocity(povItem);
-                                if (horizontalVelocity != 0) {
-                                    MoveTransitionParams moveParams = new MoveTransitionParams(
-                                            RIGHT.name().toLowerCase(),
-                                            horizontalVelocity * spriteWidthPx,
-                                            horizontalVelocity * 2 // TODO
-                                    );
-                                    transitions.add(
-                                            new Transformation<>(
-                                                    MoveTransitionParams.TRANSITION_NAME,
-                                                    moveParams
-                                            )
-                                    );
-                                    ShiftFilterParams shiftParams = new ShiftFilterParams(
-                                            LEFT.name().toLowerCase(),
-                                            horizontalVelocity * spriteWidthPx
-                                    );
-                                    filters.add(new Transformation<>(ShiftFilterParams.FILTER_NAME, shiftParams));
-                                }
+                                transitions = transitions(item, povItem);
+                                filters = filters(item, povItem);
                             }
-                            result.add(new CellEntry(r1 - row + halfHeight, c1 - column + halfWidth, sprite, transitions, filters, item.getzIndex()));
+                            cellEntries.add(
+                                    new CellEntry(
+                                            r1 - row + halfHeight,
+                                            c1 - column + halfWidth,
+                                            toSpriteName(item),
+                                            transitions,
+                                            filters,
+                                            item.getzIndex()
+                                    )
+                            );
                         });
             }
         }
-        return result;
+        return new Perception(screenHeight, screenWidth, cellEntries);
     }
 
-    private int verticalVelocity(Item item) {
-        return velocity(item, DOWN);
+    private static String toSpriteName(Item item) {
+        String sprite = item.getSprite();
+        if (item instanceof DirectionalItem) {
+            DirectionalItem directionalItem = (DirectionalItem) item;
+            if (item instanceof PropelledItem) {
+                sprite += "_";
+                PropelledItem propelledItem = (PropelledItem) item;
+                if (propelledItem.isJustMoved()) {
+                    sprite += "move";
+                } else {
+                    sprite += "idle";
+                }
+            }
+            sprite += "_" + directionalItem.getDirection().name().toLowerCase();
+        }
+        return sprite;
     }
 
-    private int horizontalVelocity(Item item) {
-        return velocity(item, RIGHT);
+    private List<? extends Transformation> transitions(Item item, PropelledItem povItem) {
+        return transformations(direction -> moveTransition(item, povItem, direction));
     }
 
-    private int velocity(Item item, Direction positiveDirection) {
+    private List<? extends Transformation> filters(Item item, PropelledItem povItem) {
+        return transformations(direction -> shiftFilter(item, povItem, direction));
+    }
+
+    private <P> List<Transformation<P>> transformations(Function<Direction, Transformation<P>> factory) {
+        Transformation<P> t = factory.apply(DOWN);
+        List<Transformation<P>> result = null;
+        if (t != null) {
+            result = newArrayList();
+            result.add(t);
+        }
+        t = factory.apply(RIGHT);
+        if (t != null) {
+            result = result == null ? newArrayList() : result;
+            result.add(t);
+        }
+        return result != null ? result : emptyList();
+    }
+
+    private <P> Transformation<P> transformation(
+            Item item,
+            PropelledItem povItem,
+            Direction positiveDirection,
+            BiFunction<Integer, Integer, Transformation<P>> factory) {
+        int velocity = velocity(item, positiveDirection) - velocity(povItem, positiveDirection);
+        if (velocity != 0) {
+            return factory.apply(velocity, positiveDirection.isVertical() ? spriteHeightPx : spriteWidthPx);
+        } else {
+            return null;
+        }
+    }
+
+    private Transformation<MoveTransitionParams> moveTransition(
+            Item item, PropelledItem povItem, Direction positiveDirection) {
+        return transformation(
+                item,
+                povItem,
+                positiveDirection,
+                (velocity, spriteDimPx) ->
+                        new Transformation<>(
+                                MoveTransitionParams.TRANSITION_NAME,
+                                new MoveTransitionParams(
+                                        positiveDirection.name().toLowerCase(),
+                                        velocity * spriteDimPx,
+                                        velocity * 2 // TODO
+                                )
+                        )
+        );
+
+    }
+
+    private Transformation<ShiftFilterParams> shiftFilter(
+            Item item, PropelledItem povItem, Direction positiveDirection) {
+        return transformation(
+                item,
+                povItem,
+                positiveDirection,
+                (velocity, spriteDimPx) ->
+                        new Transformation<>(
+                                ShiftFilterParams.FILTER_NAME,
+                                new ShiftFilterParams(
+                                        positiveDirection.getOpposite().name().toLowerCase(),
+                                        velocity * spriteDimPx
+                                )
+                        )
+        );
+
+    }
+
+    private static int velocity(Item item, Direction positiveDirection) {
         if (item instanceof PropelledItem) {
             PropelledItem pi = (PropelledItem) item;
             if (!pi.isJustMoved()) {

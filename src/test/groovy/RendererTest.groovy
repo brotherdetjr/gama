@@ -1,5 +1,6 @@
 import brotherdetjr.gama.CellEntry
 import brotherdetjr.gama.MoveTransitionParams
+import brotherdetjr.gama.Perception
 import brotherdetjr.gama.Renderer
 import brotherdetjr.gama.ShiftFilterParams
 import brotherdetjr.gama.Transformation
@@ -27,36 +28,40 @@ class RendererTest extends Specification {
             getAt(12, 11) >> [0: newItem('ground', false).place(12, 11, 0)]
             getAt(12, 12) >> [0: newItem('ground', false).place(12, 12, 0), 100: newPropelledItem('girl', true).place(12, 12, 100).pointTo(UP).markJustMoved()]
         }
-        def renderer = new Renderer(1, 1, 32, 32, 1, world)
-        def renderedView = renderer.render(povItem)
+        def renderer = new Renderer(32, 32, world)
+        def renderedPerception = renderer.render(povItem, 1, 1, 1)
         def shift = new Transformation<>('shift', new ShiftFilterParams('up', 32))
         def move = new Transformation<>('move', new MoveTransitionParams('down', 32, 2))
         expect:
         assertLenientEquals(
-                [
-                        new CellEntry(-1, -1, 'ground', [move], [shift], 0),
+                new Perception(
+                        1,
+                        1,
+                        [
+                                new CellEntry(-1, -1, 'ground', [move], [shift], 0),
 
-                        new CellEntry(-1, 0, 'ground', [move], [shift], 0),
-                        new CellEntry(-1, 0, 'rock', [move], [shift], 1),
+                                new CellEntry(-1, 0, 'ground', [move], [shift], 0),
+                                new CellEntry(-1, 0, 'rock', [move], [shift], 1),
 
-                        new CellEntry(-1, 1, 'ground', [move], [shift], 0),
+                                new CellEntry(-1, 1, 'ground', [move], [shift], 0),
 
-                        new CellEntry(0, -1, 'ground', [move], [shift], 0),
+                                new CellEntry(0, -1, 'ground', [move], [shift], 0),
 
-                        new CellEntry(0, 0, 'ground', [move], [shift], 0),
-                        new CellEntry(0, 0, 'pov_move_up', [], [], 100),
+                                new CellEntry(0, 0, 'ground', [move], [shift], 0),
+                                new CellEntry(0, 0, 'pov_move_up', [], [], 100),
 
-                        new CellEntry(0, 1, 'ground', [move], [shift], 0),
+                                new CellEntry(0, 1, 'ground', [move], [shift], 0),
 
-                        new CellEntry(1, -1, 'ground', [move], [shift], 0),
-                        new CellEntry(1, -1, 'boy_move_down', [new Transformation<>('move', new MoveTransitionParams('down', 64, 4))], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100),
+                                new CellEntry(1, -1, 'ground', [move], [shift], 0),
+                                new CellEntry(1, -1, 'boy_move_down', [new Transformation<>('move', new MoveTransitionParams('down', 64, 4))], [new Transformation<>('shift', new ShiftFilterParams('up', 64))], 100),
 
-                        new CellEntry(1, 0, 'ground', [move], [shift], 0),
+                                new CellEntry(1, 0, 'ground', [move], [shift], 0),
 
-                        new CellEntry(1, 1, 'ground', [move], [shift], 0),
-                        new CellEntry(1, 1, 'girl_move_up', [], [], 100)
-                ],
-                renderedView
+                                new CellEntry(1, 1, 'ground', [move], [shift], 0),
+                                new CellEntry(1, 1, 'girl_move_up', [], [], 100)
+                        ]
+                ),
+                renderedPerception
         )
     }
 }

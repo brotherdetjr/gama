@@ -46,12 +46,9 @@ const renderSprite = (entry, sp, config, transitionStates, textures) => {
 export const configDefaults = {
     spriteWidthPx: 32,
     spriteHeightPx: 32,
-    screenWidthInSprites: 5,
-    screenHeightInSprites: 5,
     scale: 2,
     animationFps: 12,
-    backgroundColor: '0x1099bb',
-    outerInSprites: 1
+    backgroundColor: '0x1099bb'
 };
 
 export const spriteFilters = {
@@ -127,11 +124,7 @@ export default function pixoterm(cfg, PIXI, $, Hammer) {
     const result = $.Deferred();
     $.getJSON(config.spriteComposition).done((spriteComposition) => {
         let transitionStates;
-        const app = new PIXI.Application(
-            config.spriteWidthPx * config.screenWidthInSprites * config.scale,
-            config.spriteHeightPx * config.screenHeightInSprites * config.scale,
-            {backgroundColor : parseInt(config.backgroundColor)}
-        );
+        const app = new PIXI.Application(0, 0, {backgroundColor : parseInt(config.backgroundColor)});
         app.stage.scale.x = config.scale;
         app.stage.scale.y = config.scale;
 
@@ -174,49 +167,58 @@ export default function pixoterm(cfg, PIXI, $, Hammer) {
                 );
             });
 
-            result.resolve({
-                view: app.view,
-                render: (map) => {
-                    transitionStates = [];
-                    app.stage.removeChildren();
+            const obj = { view: app.view };
 
-                    const byZ = {};
-                    map.forEach((entry) => {
-                        const z = entry != null ?
-                            entry.zIndex != null ? entry.zIndex : spriteComposition[entry.sprite].zIndex :
-                            Number.MAX_VALUE;
-                        if (byZ[z] == null) {
-                            byZ[z] = [];
-                        }
-                        byZ[z].push(entry);
-                    });
-
-                    for (let z in byZ) {
-                        byZ[z].forEach((entry) =>
-                            app.stage.addChild(
-                                renderSprite(
-                                    entry,
-                                    spriteComposition[entry.sprite],
-                                    config,
-                                    transitionStates,
-                                    resources[config.spritePack].textures
-                                )
-                            )
-                        );
-                    }
-                },
-                set scale(value) {
+            Object.defineProperty(obj, 'scale', {
+                get: () => app.stage.scale.x,
+                set: (value) => {
                     app.stage.scale.x = value;
                     app.stage.scale.y = value;
                     app.renderer.resize(
-                        config.spriteWidthPx * config.screenWidthInSprites * value,
-                        config.spriteHeightPx * config.screenHeightInSprites * value
+                        config.spriteWidthPx * obj.screenWidthInSprites * value,
+                        config.spriteHeightPx * obj.screenHeightInSprites * value
                     );
-                },
-                get scale() {
-                    return app.stage.scale.x;
                 }
             });
+
+            obj.render = (perception) => {
+                 transitionStates = [];
+                 app.stage.removeChildren();
+
+                 const byZ = {};
+                 perception.cellEntries.forEach((entry) => {
+                     const z = entry != null ?
+                         entry.zIndex != null ? entry.zIndex : spriteComposition[entry.sprite].zIndex :
+                         Number.MAX_VALUE;
+                     if (byZ[z] == null) {
+                         byZ[z] = [];
+                     }
+                     byZ[z].push(entry);
+                 });
+
+                 obj.screenHeightInSprites = perception.screenHeightInSprites;
+                 obj.screenWidthInSprites = perception.screenWidthInSprites;
+                 app.renderer.resize(
+                     config.spriteWidthPx * obj.screenWidthInSprites * obj.scale,
+                     config.spriteHeightPx * obj.screenHeightInSprites * obj.scale
+                 );
+
+                 for (let z in byZ) {
+                     byZ[z].forEach((entry) =>
+                         app.stage.addChild(
+                             renderSprite(
+                                 entry,
+                                 spriteComposition[entry.sprite],
+                                 config,
+                                 transitionStates,
+                                 resources[config.spritePack].textures
+                             )
+                         )
+                     );
+                 }
+            };
+
+            result.resolve(obj);
         });
 
     });

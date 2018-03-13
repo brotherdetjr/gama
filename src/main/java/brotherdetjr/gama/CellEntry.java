@@ -1,25 +1,21 @@
 package brotherdetjr.gama;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public final class CellEntry {
     private final int row;
     private final int column;
     private final String sprite;
-    private final List<Transformation<?>> transitions;
-    private final List<Transformation<?>> filters;
+    private final List<? extends Transformation> transitions;
+    private final List<? extends Transformation> filters;
     private final int zIndex;
 
-    @JsonCreator
-    public CellEntry(@JsonProperty("row") int row,
-                     @JsonProperty("column") int column,
-                     @JsonProperty("sprite") String sprite,
-                     @JsonProperty("transitions") List<Transformation<?>> transitions,
-                     @JsonProperty("filters") List<Transformation<?>> filters,
-                     @JsonProperty("zIndex") int zIndex) {
+    public CellEntry(int row,
+                     int column,
+                     String sprite,
+                     List<? extends Transformation> transitions,
+                     List<? extends Transformation> filters,
+                     int zIndex) {
         this.row = row;
         this.column = column;
         this.sprite = sprite;
@@ -40,11 +36,11 @@ public final class CellEntry {
         return sprite;
     }
 
-    public List<Transformation<?>> getTransitions() {
+    public List<? extends Transformation> getTransitions() {
         return transitions;
     }
 
-    public List<Transformation<?>> getFilters() {
+    public List<? extends Transformation> getFilters() {
         return filters;
     }
 

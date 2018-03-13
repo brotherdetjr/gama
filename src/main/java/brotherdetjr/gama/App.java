@@ -57,13 +57,15 @@ public final class App {
             world.attach(it);
         }
         PropelledItem bant = bants.get(0);
-        Renderer renderer = new Renderer(9, 9, 32, 32, 2, world);
+        Renderer renderer = new Renderer(32, 32, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
                     sessions.forEach((token, session) -> {
                         try {
-                            String json = objectMapper.writeValueAsString(renderer.render(bant));
+                            String json = objectMapper.writeValueAsString(
+                                    renderer.render(bant, 9, 9, 2)
+                            );
                             session.timestampedWsSessions()
                                     .forEach(entry -> {
                                         try {

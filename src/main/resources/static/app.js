@@ -3,9 +3,6 @@ import pixoterm from './pixoterm.js'
 
 pixoterm(
     {
-        outerInSprites: 2,
-        screenWidthInSprites: 9,
-        screenHeightInSprites: 9,
         spritePack: 'sprites.json',
         spriteComposition: 'composition.json'
     },
