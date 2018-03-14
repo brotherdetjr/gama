@@ -4,7 +4,10 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 
 public final class PropelledItem extends DirectionalItem<PropelledItem> {
 
-    private boolean justMoved;
+    private long currentTick;
+    private long lastMoveTick;
+    private int lastRow;
+    private int lastColumn;
 
     private PropelledItem(String sprite, boolean obstacle) {
         super(sprite, obstacle);
@@ -15,22 +18,29 @@ public final class PropelledItem extends DirectionalItem<PropelledItem> {
     }
 
     public boolean isJustMoved() {
-        return justMoved;
+        return currentTick - lastMoveTick < 2;
     }
 
-    public PropelledItem markJustMoved() {
-        this.justMoved = true;
-        return this;
-    }
-
-    public PropelledItem unmarkJustMoved() {
-        this.justMoved = false;
+    public PropelledItem currentTick(long currentTick) {
+        this.currentTick = currentTick;
         return this;
     }
 
     @Override
+    public PropelledItem place(int row, int column, Integer zIndex) {
+        lastMoveTick = currentTick;
+        lastRow = getRow();
+        lastColumn = getColumn();
+        return super.place(row, column, zIndex);
+    }
+
+    @Override
     protected ToStringHelper toStringHelper() {
-        return super.toStringHelper().add("justMoved", justMoved);
+        return super.toStringHelper()
+                .add("currentTick", currentTick)
+                .add("lastMoveTick", lastMoveTick)
+                .add("lastRow", lastRow)
+                .add("lastColumn", lastColumn);
     }
 
 }

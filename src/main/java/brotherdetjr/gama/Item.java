@@ -42,7 +42,7 @@ public class Item<T extends Item> {
     }
 
     @SuppressWarnings("unchecked")
-    public final T place(int row, int column, Integer zIndex) {
+    public T place(int row, int column, Integer zIndex) {
         this.row = row;
         this.column = column;
         this.zIndex = zIndex;

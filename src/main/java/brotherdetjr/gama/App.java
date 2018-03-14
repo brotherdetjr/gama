@@ -112,6 +112,7 @@ public final class App {
                         MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
                         propelledItemMoveHandler.accept(it, r);
                     }
+                    world.nextTick();
                 },
                 framePeriodInMillis,
                 framePeriodInMillis,

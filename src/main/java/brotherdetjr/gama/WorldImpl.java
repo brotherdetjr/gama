@@ -1,8 +1,10 @@
 package brotherdetjr.gama;
 
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.emptyMap;
 
@@ -12,7 +14,9 @@ public final class WorldImpl implements World {
     private final int width;
     private final Cell[] cells;
     private final boolean torus;
+    private final Set<PropelledItem> propelledItems;
     private int freeCellCount;
+    private long tick;
 
     public WorldImpl(int height, int width, boolean torus) {
         this.height = height;
@@ -21,6 +25,7 @@ public final class WorldImpl implements World {
         setAll(cells, ignore -> new Cell());
         this.torus = torus;
         freeCellCount = height * width;
+        propelledItems = newHashSet();
     }
 
     @Override
@@ -33,6 +38,9 @@ public final class WorldImpl implements World {
                 if (cell.obstacleCount == 1) {
                     freeCellCount--;
                 }
+            }
+            if (item instanceof PropelledItem) {
+                propelledItems.add(((PropelledItem) item).currentTick(tick));
             }
         } else {
             throw new IllegalArgumentException();
@@ -49,6 +57,9 @@ public final class WorldImpl implements World {
                 if (cell.obstacleCount == 0) {
                     freeCellCount++;
                 }
+            }
+            if (item instanceof PropelledItem) {
+                propelledItems.remove(item);
             }
         } else {
             throw new IllegalArgumentException();
@@ -128,6 +139,17 @@ public final class WorldImpl implements World {
         return freeCellCount;
     }
 
+    @Override
+    public void nextTick() {
+        tick++;
+        propelledItems.forEach(item -> item.currentTick(tick));
+    }
+
+    @Override
+    public long getTick() {
+        return tick;
+    }
+
     private void checkIndexInBounds(int index) {
         if (index >= cells.length || index < 0) {
             throw new IllegalArgumentException();
@@ -145,9 +167,9 @@ public final class WorldImpl implements World {
     private int toLinearIndex(int row, int column) {
         return torify(row, height) * width + torify(column, width);
     }
-
     private static class Cell {
         int obstacleCount;
         Map<Integer, Item> items = newHashMap();
+
     }
 }

@@ -26,4 +26,8 @@ public interface World {
     int indexToColumn(int index);
 
     int getFreeCellCount();
+
+    void nextTick();
+
+    long getTick();
 }
