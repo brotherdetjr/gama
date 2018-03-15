@@ -11,9 +11,9 @@ public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem,
     }
 
     @Override
-    public void accept(PropelledItem propelledItem, MoveRequest moveRequest) {
-        int r = propelledItem.getRow();
-        int c = propelledItem.getColumn();
+    public void accept(PropelledItem item, MoveRequest moveRequest) {
+        int r = item.getRow();
+        int c = item.getColumn();
         switch (moveRequest.getDirection()) {
             case UP: r--; break;
             case DOWN: r++; break;
@@ -21,10 +21,12 @@ public final class PropelledItemMoveHandler implements BiConsumer<PropelledItem,
             case RIGHT: c++;
         }
         if (world.embraces(r, c) && !world.isOccupied(r, c)) {
-            world.detach(propelledItem);
-            propelledItem.place(r, c);
-            world.attach(propelledItem);
+            world.detach(item);
+            item.setPreviousPos(item.getRow(), item.getPreviousColumn())
+                    .place(r, c)
+                    .setLastMoveTick(world.getTick());
+            world.attach(item);
         }
-        propelledItem.pointTo(moveRequest.getDirection());
+        item.pointTo(moveRequest.getDirection());
     }
 }

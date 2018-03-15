@@ -59,12 +59,12 @@ public final class Renderer {
         return new Perception(screenHeight, screenWidth, cellEntries);
     }
 
-    private static String toSpriteName(Item item) {
+    private String toSpriteName(Item item) {
         String sprite = item.getSprite();
         if (item instanceof DirectionalItem) {
             DirectionalItem directionalItem = (DirectionalItem) item;
             if (item instanceof PropelledItem) {
-                if (((PropelledItem) item).isJustMoved()) {
+                if (isJustMoved((PropelledItem) item)) {
                     sprite += "_move";
                 } else {
                     sprite += "_idle";
@@ -148,10 +148,10 @@ public final class Renderer {
 
     }
 
-    private static int velocity(Item item, Direction positiveDirection) {
+    private int velocity(Item item, Direction positiveDirection) {
         if (item instanceof PropelledItem) {
             PropelledItem pi = (PropelledItem) item;
-            if (!pi.isJustMoved()) {
+            if (!isJustMoved(pi)) {
                 return 0;
             } else if (pi.getDirection() == positiveDirection) {
                 return 1;
@@ -163,5 +163,9 @@ public final class Renderer {
         } else {
             return 0;
         }
+    }
+
+    private boolean isJustMoved(PropelledItem item) {
+        return world.getTick() - item.getLastMoveTick() < 2;
     }
 }

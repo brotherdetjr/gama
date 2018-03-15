@@ -1,10 +1,8 @@
 package brotherdetjr.gama;
 
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.emptyMap;
 
@@ -14,7 +12,6 @@ public final class WorldImpl implements World {
     private final int width;
     private final Cell[] cells;
     private final boolean torus;
-    private final Set<PropelledItem> propelledItems;
     private int freeCellCount;
     private long tick;
 
@@ -25,7 +22,6 @@ public final class WorldImpl implements World {
         setAll(cells, ignore -> new Cell());
         this.torus = torus;
         freeCellCount = height * width;
-        propelledItems = newHashSet();
     }
 
     @Override
@@ -38,9 +34,6 @@ public final class WorldImpl implements World {
                 if (cell.obstacleCount == 1) {
                     freeCellCount--;
                 }
-            }
-            if (item instanceof PropelledItem) {
-                propelledItems.add(((PropelledItem) item).currentTick(tick));
             }
         } else {
             throw new IllegalArgumentException();
@@ -57,9 +50,6 @@ public final class WorldImpl implements World {
                 if (cell.obstacleCount == 0) {
                     freeCellCount++;
                 }
-            }
-            if (item instanceof PropelledItem) {
-                propelledItems.remove(item);
             }
         } else {
             throw new IllegalArgumentException();
@@ -142,7 +132,6 @@ public final class WorldImpl implements World {
     @Override
     public void nextTick() {
         tick++;
-        propelledItems.forEach(item -> item.currentTick(tick));
     }
 
     @Override

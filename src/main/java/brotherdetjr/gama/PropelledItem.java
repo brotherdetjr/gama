@@ -4,10 +4,9 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 
 public final class PropelledItem extends DirectionalItem<PropelledItem> {
 
-    private long currentTick;
     private long lastMoveTick;
-    private int lastRow;
-    private int lastColumn;
+    private int previousRow;
+    private int previousColumn;
 
     private PropelledItem(String sprite, boolean obstacle) {
         super(sprite, obstacle);
@@ -17,30 +16,40 @@ public final class PropelledItem extends DirectionalItem<PropelledItem> {
         return new PropelledItem(sprite, obstacle);
     }
 
-    public boolean isJustMoved() {
-        return currentTick - lastMoveTick < 2;
-    }
-
-    public PropelledItem currentTick(long currentTick) {
-        this.currentTick = currentTick;
+    public PropelledItem setLastMoveTick(long lastMoveTick) {
+        this.lastMoveTick = lastMoveTick;
         return this;
     }
 
-    @Override
-    public PropelledItem place(int row, int column, Integer zIndex) {
-        lastMoveTick = currentTick;
-        lastRow = getRow();
-        lastColumn = getColumn();
-        return super.place(row, column, zIndex);
+    public PropelledItem previousRow(int previousRow) {
+        this.previousRow = previousRow;
+        return this;
+    }
+
+    public PropelledItem setPreviousPos(int row, int column) {
+        previousRow = row;
+        previousColumn = column;
+        return this;
+    }
+
+    public long getLastMoveTick() {
+        return lastMoveTick;
+    }
+
+    public int getPreviousRow() {
+        return previousRow;
+    }
+
+    public int getPreviousColumn() {
+        return previousColumn;
     }
 
     @Override
     protected ToStringHelper toStringHelper() {
         return super.toStringHelper()
-                .add("currentTick", currentTick)
                 .add("lastMoveTick", lastMoveTick)
-                .add("lastRow", lastRow)
-                .add("lastColumn", lastColumn);
+                .add("previousRow", previousRow)
+                .add("previousColumn", previousColumn);
     }
 
 }
