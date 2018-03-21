@@ -66,7 +66,7 @@ public final class App {
             world.attach(it);
         }
         PropelledItem bant = bants.get(0);
-        Renderer renderer = new Renderer(32, 32, world);
+        Renderer renderer = new Renderer(32, 32, 2, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         MetricRegistry metrics = new MetricRegistry();
@@ -108,11 +108,11 @@ public final class App {
                     render.update(renderTime.get() / 1000);
                     renderAndSerialize.update(renderAndSerializeTime.get() / 1000);
                     renderAndSend.update((nanoTime() - startTime) / 1000);
+                    world.nextTick();
                     for (PropelledItem it : bants) {
                         MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
                         propelledItemMoveHandler.accept(it, r);
                     }
-                    world.nextTick();
                 },
                 framePeriodInMillis,
                 framePeriodInMillis,
