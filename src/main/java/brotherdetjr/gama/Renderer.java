@@ -47,12 +47,12 @@ public final class Renderer {
                             List<? extends Transformation> transitions = emptyList();
                             List<? extends Transformation> filters = emptyList();
                             boolean needToRender;
-                            int itemRow1 = r1 - row + halfHeight;
-                            int itemRow2 = itemRow1 + velocity(item, DOWN) - velocity(povItem, DOWN);
-                            int itemColumn1 = c1 - column + halfWidth;
-                            int itemColumn2 = itemColumn1 + velocity(item, RIGHT) - velocity(povItem, RIGHT);
+                            int ir = r1 - row + halfHeight;
+                            int itemRow1 = ir + velocity(povItem, DOWN) - velocity(item, DOWN);
+                            int ic = c1 - column + halfWidth;
+                            int itemColumn1 = ic + velocity(povItem, RIGHT) - velocity(item, RIGHT);
                             if (item != povItem) {
-                                needToRender = needToRender(itemRow1, itemColumn1, itemRow2, itemColumn2,
+                                needToRender = needToRender(itemRow1, itemColumn1, ir, ic,
                                         screenHeight, screenWidth, basicYStepPx, basicXStepPx);
                                 if (needToRender) {
                                     transitions = transitions(item, povItem);
@@ -64,8 +64,8 @@ public final class Renderer {
                             if (needToRender) {
                                 cellEntries.add(
                                         new CellEntry(
-                                                itemRow1,
-                                                itemColumn1,
+                                                ir,
+                                                ic,
                                                 toSpriteName(item),
                                                 transitions,
                                                 filters,
@@ -141,9 +141,9 @@ public final class Renderer {
                         new Transformation<>(
                                 MoveTransitionParams.TRANSITION_NAME,
                                 new MoveTransitionParams(
-                                        pd.name().toLowerCase(),
-                                        velocity * spriteDimPx(pd),
-                                        velocity * (pd.isVertical() ? basicYStepPx : basicXStepPx)
+                                        velocity > 0 ? pd.name().toLowerCase() : pd.getOpposite().name().toLowerCase(),
+                                        abs(velocity) * spriteDimPx(pd),
+                                        abs(velocity) * (pd.isVertical() ? basicYStepPx : basicXStepPx)
                                 )
                         )
         );
@@ -160,8 +160,8 @@ public final class Renderer {
                         new Transformation<>(
                                 ShiftFilterParams.FILTER_NAME,
                                 new ShiftFilterParams(
-                                        pd.getOpposite().name().toLowerCase(),
-                                        velocity * spriteDimPx(pd)
+                                        velocity > 0 ? pd.getOpposite().name().toLowerCase() : pd.name().toLowerCase(),
+                                        abs(velocity) * spriteDimPx(pd)
                                 )
                         )
         );
@@ -201,10 +201,10 @@ public final class Renderer {
                 itemColumn1 >= screenWidth && itemColumn2 >= screenWidth) {
             return false;
         }
-        if (itemRow1 > 0 && itemRow1 < screenHeight ||
-                itemRow2 > 0 && itemRow2 < screenHeight ||
-                itemColumn1 > 0 && itemColumn1 < screenWidth ||
-                itemColumn2 > 0 && itemColumn2 < screenWidth) {
+        if (itemRow1 >= 0 && itemRow1 < screenHeight &&
+                itemRow2 >= 0 && itemRow2 < screenHeight &&
+                itemColumn1 >= 0 && itemColumn1 < screenWidth &&
+                itemColumn2 >= 0 && itemColumn2 < screenWidth) {
             return true;
         }
         int posY = 0;
