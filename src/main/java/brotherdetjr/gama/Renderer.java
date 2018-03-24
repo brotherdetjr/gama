@@ -1,8 +1,6 @@
 package brotherdetjr.gama;
 
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static brotherdetjr.gama.Direction.DOWN;
 import static brotherdetjr.gama.Direction.RIGHT;
@@ -45,7 +43,6 @@ public final class Renderer {
                         .values()
                         .forEach(item -> {
                             List<? extends Transformation> transitions = emptyList();
-                            List<? extends Transformation> filters = emptyList();
                             boolean needToRender;
                             int ir = r1 - row + halfHeight;
                             int itemRow1 = ir + velocity(povItem, DOWN) - velocity(item, DOWN);
@@ -56,7 +53,6 @@ public final class Renderer {
                                         screenHeight, screenWidth, basicYStepPx, basicXStepPx);
                                 if (needToRender) {
                                     transitions = transitions(item, povItem);
-                                    filters = filters(item, povItem);
                                 }
                             } else {
                                 needToRender = true;
@@ -64,11 +60,11 @@ public final class Renderer {
                             if (needToRender) {
                                 cellEntries.add(
                                         new CellEntry(
-                                                ir,
-                                                ic,
+                                                itemRow1,
+                                                itemColumn1,
                                                 toSpriteName(item),
                                                 transitions,
-                                                filters,
+                                                emptyList(),
                                                 item.getzIndex()
                                         )
                                 );
@@ -96,21 +92,13 @@ public final class Renderer {
     }
 
     private List<? extends Transformation> transitions(Item item, PropelledItem povItem) {
-        return transformations(direction -> moveTransition(item, povItem, direction));
-    }
-
-    private List<? extends Transformation> filters(Item item, PropelledItem povItem) {
-        return transformations(direction -> shiftFilter(item, povItem, direction));
-    }
-
-    private <P> List<Transformation<P>> transformations(Function<Direction, Transformation<P>> factory) {
-        Transformation<P> t = factory.apply(DOWN);
-        List<Transformation<P>> result = null;
+        Transformation<MoveTransitionParams> t = moveTransition(item, povItem, DOWN);
+        List<Transformation<MoveTransitionParams>> result = null;
         if (t != null) {
             result = newArrayList();
             result.add(t);
         }
-        t = factory.apply(RIGHT);
+        t = moveTransition(item, povItem, RIGHT);
         if (t != null) {
             result = result == null ? newArrayList() : result;
             result.add(t);
@@ -118,58 +106,21 @@ public final class Renderer {
         return result != null ? result : emptyList();
     }
 
-    private <P> Transformation<P> transformation(
-            Item item,
-            PropelledItem povItem,
-            Direction positiveDirection,
-            BiFunction<Integer, Direction, Transformation<P>> factory) {
+    private Transformation<MoveTransitionParams> moveTransition(
+            Item item, PropelledItem povItem, Direction positiveDirection) {
         int velocity = velocity(item, positiveDirection) - velocity(povItem, positiveDirection);
         if (velocity != 0) {
-            return factory.apply(velocity, positiveDirection);
+            return new Transformation<>(
+                    MoveTransitionParams.TRANSITION_NAME,
+                    new MoveTransitionParams(
+                            velocity > 0 ? positiveDirection.name().toLowerCase() : positiveDirection.getOpposite().name().toLowerCase(),
+                            abs(velocity) * (positiveDirection.isVertical() ? spriteHeightPx : spriteWidthPx),
+                            abs(velocity) * (positiveDirection.isVertical() ? basicYStepPx : basicXStepPx)
+                    )
+            );
         } else {
             return null;
         }
-    }
-
-    private Transformation<MoveTransitionParams> moveTransition(
-            Item item, PropelledItem povItem, Direction positiveDirection) {
-        return transformation(
-                item,
-                povItem,
-                positiveDirection,
-                (velocity, pd) ->
-                        new Transformation<>(
-                                MoveTransitionParams.TRANSITION_NAME,
-                                new MoveTransitionParams(
-                                        velocity > 0 ? pd.name().toLowerCase() : pd.getOpposite().name().toLowerCase(),
-                                        abs(velocity) * spriteDimPx(pd),
-                                        abs(velocity) * (pd.isVertical() ? basicYStepPx : basicXStepPx)
-                                )
-                        )
-        );
-
-    }
-
-    private Transformation<ShiftFilterParams> shiftFilter(
-            Item item, PropelledItem povItem, Direction positiveDirection) {
-        return transformation(
-                item,
-                povItem,
-                positiveDirection,
-                (velocity, pd) ->
-                        new Transformation<>(
-                                ShiftFilterParams.FILTER_NAME,
-                                new ShiftFilterParams(
-                                        velocity > 0 ? pd.getOpposite().name().toLowerCase() : pd.name().toLowerCase(),
-                                        abs(velocity) * spriteDimPx(pd)
-                                )
-                        )
-        );
-
-    }
-
-    private int spriteDimPx(Direction positiveDirection) {
-        return positiveDirection.isVertical() ? spriteHeightPx : spriteWidthPx;
     }
 
     private int velocity(Item item, Direction positiveDirection) {
