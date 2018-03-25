@@ -12,12 +12,11 @@ import static com.google.common.collect.Maps.newConcurrentMap;
 public final class UserSession {
     private final String username;
     private final Map<WsSession, AtomicLong> wsSessions;
-    private final AtomicInteger frame;
+    private volatile Object lastRequest;
 
     public UserSession(String username) {
         this.username = username;
         wsSessions = newConcurrentMap();
-        frame = new AtomicInteger(0);
     }
 
     public String getUsername() {
@@ -40,7 +39,13 @@ public final class UserSession {
         return !wsSessions.isEmpty();
     }
 
-    public int nextFrame() {
-        return frame.getAndIncrement() % 4;
+    public <T> T takeLastRequest() {
+        @SuppressWarnings("unchecked") T result = (T) lastRequest;
+        lastRequest = null;
+        return result;
+    }
+
+    public <T> void offerLastRequest(T lastRequest) {
+        this.lastRequest = lastRequest;
     }
 }

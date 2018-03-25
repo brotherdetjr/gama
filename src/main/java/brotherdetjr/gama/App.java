@@ -57,14 +57,14 @@ public final class App {
             bants.add(it);
             world.attach(it);
         }
-        PropelledItem bant = bants.get(0);
+        PropelledItem pov = bants.get(0);
         Renderer renderer = new Renderer(32, 32, 2, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> sessions.forEach((token, session) -> {
                     try {
-                        Perception perception = renderer.render(bant, 7, 7, 2);
+                        Perception perception = renderer.render(pov, 7, 7, 2);
                         String json = objectMapper.writeValueAsString(perception);
                         session.timestampedWsSessions()
                                 .forEach(entry -> {
@@ -78,9 +78,17 @@ public final class App {
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
+                    Object lastRequest = session.takeLastRequest();
+                    if (lastRequest != null) {
+                        if (lastRequest instanceof MoveRequest) {
+                            propelledItemMoveHandler.accept(pov, (MoveRequest) lastRequest);
+                        }
+                    }
                     for (PropelledItem it : bants) {
-                        MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
-                        propelledItemMoveHandler.accept(it, r);
+                        if (it != pov) {
+                            MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
+                            propelledItemMoveHandler.accept(it, r);
+                        }
                     }
                     world.nextTick();
                 }),
@@ -128,6 +136,12 @@ public final class App {
                                     log.warn("Requested new WebSocket for unknown token: {}. Disconnecting.", token);
                                     session.disconnect();
                                 }
+                            });
+                            ws.onMessage((session, msg) -> {
+                                String token = session.queryParam("token");
+                                UserSession userSession = sessions.get(token);
+                                MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
+                                userSession.offerLastRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {
                                 String token = session.queryParam("token");
