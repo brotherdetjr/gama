@@ -2,8 +2,8 @@
 import pixoterm from './pixoterm.js'
 
 const toDirection = (event, perception) => {
-    const verticalVelocity = event.detail.row - perception.screenHeightInSprites / 2;
-    const horizontalVelocity = event.detail.column - perception.screenWidthInSprites / 2;
+    const verticalVelocity = event.detail.row - Math.floor(perception.screenHeightInSprites / 2);
+    const horizontalVelocity = event.detail.column - Math.floor(perception.screenWidthInSprites / 2);
     if (verticalVelocity != 0 && Math.abs(verticalVelocity) > Math.abs(horizontalVelocity)) {
         return verticalVelocity < 0 ? 'UP' : 'DOWN';
     } else if (horizontalVelocity != 0 && Math.abs(horizontalVelocity) > Math.abs(verticalVelocity)) {

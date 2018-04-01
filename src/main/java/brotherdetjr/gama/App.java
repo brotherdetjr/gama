@@ -63,6 +63,19 @@ public final class App {
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> sessions.forEach((token, session) -> {
+                    Object lastRequest = session.takeLastRequest();
+                    if (lastRequest != null) {
+                        if (lastRequest instanceof MoveRequest) {
+                            propelledItemMoveHandler.accept(pov, (MoveRequest) lastRequest);
+                        }
+                    }
+                    for (PropelledItem it : bants) {
+                        if (it != pov) {
+                            MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
+                            propelledItemMoveHandler.accept(it, r);
+                        }
+                    }
+                    world.nextTick();
                     try {
                         Perception perception = renderer.render(pov, 7, 7, 2);
                         String json = objectMapper.writeValueAsString(perception);
@@ -78,19 +91,6 @@ public final class App {
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                    Object lastRequest = session.takeLastRequest();
-                    if (lastRequest != null) {
-                        if (lastRequest instanceof MoveRequest) {
-                            propelledItemMoveHandler.accept(pov, (MoveRequest) lastRequest);
-                        }
-                    }
-                    for (PropelledItem it : bants) {
-                        if (it != pov) {
-                            MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
-                            propelledItemMoveHandler.accept(it, r);
-                        }
-                    }
-                    world.nextTick();
                 }),
                 framePeriodInMillis,
                 framePeriodInMillis,
@@ -141,6 +141,7 @@ public final class App {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
+                                log.debug("Action taken by {}: {}", token, moveRequest);
                                 userSession.offerLastRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {

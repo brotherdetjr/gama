@@ -3,7 +3,6 @@ package brotherdetjr.gama;
 import io.javalin.embeddedserver.jetty.websocket.WsSession;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -46,6 +45,11 @@ public final class UserSession {
     }
 
     public <T> void offerLastRequest(T lastRequest) {
-        this.lastRequest = lastRequest;
+        if (lastRequest == null) {
+            throw new IllegalArgumentException();
+        }
+        if (this.lastRequest == null) {
+            this.lastRequest = lastRequest;
+        }
     }
 }
