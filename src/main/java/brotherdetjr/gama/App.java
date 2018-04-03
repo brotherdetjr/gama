@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import static brotherdetjr.gama.Direction.DOWN;
@@ -59,19 +58,15 @@ public final class App {
             world.attach(it);
         }
         PropelledItem pov = bants.get(0);
-        Homunculus homunculus = new DefaultHomunculus();
         Renderer renderer = new Renderer(32, 32, 2, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
-        AtomicReference<Perception> prevPerception = new AtomicReference<>();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> sessions.forEach((token, session) -> {
-                    if (prevPerception.get() != null) {
-                        Object request = homunculus.poll(prevPerception.get());
-                        if (request != null) {
-                            if (request instanceof MoveRequest) {
-                                propelledItemMoveHandler.accept(pov, (MoveRequest) request);
-                            }
+                    Object lastRequest = session.takeLastRequest();
+                    if (lastRequest != null) {
+                        if (lastRequest instanceof MoveRequest) {
+                            propelledItemMoveHandler.accept(pov, (MoveRequest) lastRequest);
                         }
                     }
                     for (PropelledItem it : bants) {
@@ -83,7 +78,6 @@ public final class App {
                     world.nextTick();
                     try {
                         Perception perception = renderer.render(pov, 7, 7, 2);
-                        prevPerception.set(perception);
                         String json = objectMapper.writeValueAsString(perception);
                         session.timestampedWsSessions()
                                 .forEach(entry -> {
@@ -145,9 +139,10 @@ public final class App {
                             });
                             ws.onMessage((session, msg) -> {
                                 String token = session.queryParam("token");
-                                WalkCommand walkCommand = objectMapper.readValue(msg, WalkCommand.class);
-                                log.debug("Action taken by {}: {}", token, walkCommand);
-                                homunculus.handle(walkCommand);
+                                UserSession userSession = sessions.get(token);
+                                MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
+                                log.debug("Action taken by {}: {}", token, moveRequest);
+                                userSession.offerLastRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {
                                 String token = session.queryParam("token");
