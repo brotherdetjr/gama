@@ -11,10 +11,12 @@ import static com.google.common.collect.Maps.newConcurrentMap;
 public final class UserSession {
     private final String username;
     private final Map<WsSession, AtomicLong> wsSessions;
+    private final PropelledItem pov;
     private volatile Object lastRequest;
 
-    public UserSession(String username) {
+    public UserSession(String username, PropelledItem pov) {
         this.username = username;
+        this.pov = pov;
         wsSessions = newConcurrentMap();
     }
 
@@ -36,6 +38,10 @@ public final class UserSession {
 
     public boolean hasWsSessions() {
         return !wsSessions.isEmpty();
+    }
+
+    public PropelledItem getPov() {
+        return pov;
     }
 
     public <T> T takeLastRequest() {

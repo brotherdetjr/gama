@@ -141,7 +141,7 @@ public final class Renderer {
     }
 
     private boolean isJustMoved(PropelledItem item) {
-        return world.getTick() - item.getLastMoveTick() < 2;
+        return world.getTick() == item.getLastMoveTick();
     }
 
     private boolean needToRender(int itemRow1, int itemColumn1, int itemRow2, int itemColumn2,

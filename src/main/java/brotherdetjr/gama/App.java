@@ -37,8 +37,9 @@ public final class App {
     public static void main(String[] args) throws Exception {
         int httpPort = 8080;
         int framePeriodInMillis = 2000;
+        int seedSalt = 5537208;
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthService authService = new AuthServiceImpl(new Random().nextLong());
+        AuthService authService = new AuthServiceImpl(seedSalt);
         ImmutableMap<Integer, String> gidToSprite =
                 ImmutableMap.of(18, "sand_0", 19, "sand_1", 20, "sand_2", 21, "sand_3");
         World world = WorldParser.parse(
@@ -49,49 +50,50 @@ public final class App {
         );
         PropelledItemMoveHandler propelledItemMoveHandler = new PropelledItemMoveHandler(world);
         List<PropelledItem> bants = newArrayList();
-        Random random = new Random();
+        Random random = new Random(seedSalt);
         for (int i = 0; i < 100; i++) {
-            int idx = world.nthFreeCellIndex(abs(random.nextInt()));
-            PropelledItem it = newPropelledItem("bant", true)
-                    .place(world.indexToRow(idx), world.indexToColumn(idx), 100).pointTo(DOWN);
+            PropelledItem it = randomlyPlacedPropelledItem(world, random);
             bants.add(it);
             world.attach(it);
         }
-        PropelledItem pov = bants.get(0);
         Renderer renderer = new Renderer(32, 32, 2, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
-                () -> sessions.forEach((token, session) -> {
-                    Object lastRequest = session.takeLastRequest();
-                    if (lastRequest != null) {
-                        if (lastRequest instanceof MoveRequest) {
-                            propelledItemMoveHandler.accept(pov, (MoveRequest) lastRequest);
-                        }
-                    }
+                () -> {
                     for (PropelledItem it : bants) {
-                        if (it != pov) {
-                            MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
-                            propelledItemMoveHandler.accept(it, r);
+                        MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
+                        propelledItemMoveHandler.accept(it, r);
+                    }
+                    sessions.forEach((token, session) -> {
+                        Object lastRequest = session.takeLastRequest();
+                        if (lastRequest != null) {
+                            if (lastRequest instanceof MoveRequest) {
+                                MoveRequest moveRequest = (MoveRequest) lastRequest;
+                                log.debug("{} is moving {}",
+                                        session.getUsername(), moveRequest.getDirection().toString().toLowerCase());
+                                propelledItemMoveHandler.accept(session.getPov(), moveRequest);
+                            }
                         }
-                    }
+                        try {
+                            Perception perception = renderer.render(session.getPov(), 7, 7, 2);
+                            String json = objectMapper.writeValueAsString(perception);
+                            log.debug("Sending JSON to {}: {}", session.getUsername(), json);
+                            session.timestampedWsSessions()
+                                    .forEach(entry -> {
+                                        try {
+                                            entry.getKey().getRemote().sendString(json);
+                                            entry.getValue().set(timestampSupplier.get());
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                     world.nextTick();
-                    try {
-                        Perception perception = renderer.render(pov, 7, 7, 2);
-                        String json = objectMapper.writeValueAsString(perception);
-                        session.timestampedWsSessions()
-                                .forEach(entry -> {
-                                    try {
-                                        entry.getKey().getRemote().sendString(json);
-                                        entry.getValue().set(timestampSupplier.get());
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }),
+                },
                 framePeriodInMillis,
                 framePeriodInMillis,
                 MILLISECONDS
@@ -119,7 +121,7 @@ public final class App {
                             String username = authService.extractUserName(ctx);
                             sessions.computeIfAbsent(token, ignore -> {
                                 log.debug("Starting new session for user {} with token: {}", username, token);
-                                return new UserSession(username);
+                                return new UserSession(username, randomlyPlacedPropelledItem(world, random));
                             });
                             ctx.renderFreemarker("main.html", ImmutableMap.of("token", token));
                         },
@@ -141,7 +143,7 @@ public final class App {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
-                                log.debug("Action taken by {}: {}", token, moveRequest);
+                                log.trace("Action taken by {}: {}", token, moveRequest);
                                 userSession.offerLastRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {
@@ -153,6 +155,12 @@ public final class App {
                 )
                 .port(httpPort)
                 .start();
+    }
+
+    private static PropelledItem randomlyPlacedPropelledItem(World world, Random random) {
+        int idx = world.nthFreeCellIndex(abs(random.nextInt()));
+        return newPropelledItem("bant", true)
+                .place(world.indexToRow(idx), world.indexToColumn(idx), 100).setLastMoveTick(-1).pointTo(DOWN);
     }
 
 }
