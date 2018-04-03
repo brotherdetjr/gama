@@ -52,9 +52,7 @@ public final class App {
         List<PropelledItem> bants = newArrayList();
         Random random = new Random(seedSalt);
         for (int i = 0; i < 100; i++) {
-            PropelledItem it = randomlyPlacedPropelledItem(world, random);
-            bants.add(it);
-            world.attach(it);
+            bants.add(randomlyPlacedPropelledItem(world, random));
         }
         Renderer renderer = new Renderer(32, 32, 2, 2, world);
         Supplier<Long> timestampSupplier = System::currentTimeMillis;
@@ -62,8 +60,11 @@ public final class App {
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> {
                     for (PropelledItem it : bants) {
-                        MoveRequest r = new MoveRequest(Direction.values()[random.nextInt(Direction.values().length)]);
-                        propelledItemMoveHandler.accept(it, r);
+                        int idx = random.nextInt(Direction.values().length + 1);
+                        if (idx < Direction.values().length) {
+                            MoveRequest r = new MoveRequest(Direction.values()[idx]);
+                            propelledItemMoveHandler.accept(it, r);
+                        }
                     }
                     sessions.forEach((token, session) -> {
                         Object lastRequest = session.takeLastRequest();
@@ -75,10 +76,12 @@ public final class App {
                                 propelledItemMoveHandler.accept(session.getPov(), moveRequest);
                             }
                         }
+                    });
+                    sessions.forEach((token, session) -> {
                         try {
                             Perception perception = renderer.render(session.getPov(), 7, 7, 2);
                             String json = objectMapper.writeValueAsString(perception);
-                            log.debug("Sending JSON to {}: {}", session.getUsername(), json);
+                            log.trace("Sending JSON to {}: {}", session.getUsername(), json);
                             session.timestampedWsSessions()
                                     .forEach(entry -> {
                                         try {
@@ -159,8 +162,12 @@ public final class App {
 
     private static PropelledItem randomlyPlacedPropelledItem(World world, Random random) {
         int idx = world.nthFreeCellIndex(abs(random.nextInt()));
-        return newPropelledItem("bant", true)
-                .place(world.indexToRow(idx), world.indexToColumn(idx), 100).setLastMoveTick(-1).pointTo(DOWN);
+        PropelledItem item = newPropelledItem("bant", true)
+                .place(world.indexToRow(idx), world.indexToColumn(idx), 100)
+                .setLastMoveTick(-1)
+                .pointTo(DOWN);
+        world.attach(item);
+        return item;
     }
 
 }
