@@ -43,7 +43,7 @@ class RendererTest extends Specification {
             getAt(13, 11) >> [0: newItem('ground', false).place(13, 11, 0)]
             getAt(13, 12) >> [0: newItem('ground', false).place(13, 12, 0)]
             getAt(13, 13) >> [0: newItem('ground', false).place(13, 13, 0)]
-            getTick() >> 2L
+            getTick() >> 1L
         }
         def renderer = new Renderer(32, 32, 2, 2, world)
         def renderedPerception = renderer.render(povItem, 3, 3, 1)
@@ -92,7 +92,7 @@ class RendererTest extends Specification {
             getAt(12, 10) >> [0: newItem('ground', false).place(12, 10, 0), 100: newPropelledItem('boy', true).place(12, 10, 100).pointTo(DOWN).setLastMoveTick(1L)]
             getAt(12, 11) >> [0: newItem('ground', false).place(12, 11, 0)]
             getAt(12, 12) >> [0: newItem('ground', false).place(12, 12, 0), 100: newPropelledItem('girl', true).place(12, 12, 100).pointTo(UP).setLastMoveTick(1L)]
-            getTick() >> 2L
+            getTick() >> 1L
         }
         def renderer = new Renderer(32, 32, 2, 2, world)
         def renderedPerception = renderer.render(povItem, 1, 1, 1)
@@ -123,7 +123,7 @@ class RendererTest extends Specification {
             getAt(12, 10) >> [0: newItem('ground', false).place(12, 10, 0), 100: newPropelledItem('boy', true).place(12, 10, 100).pointTo(DOWN).setLastMoveTick(1L)]
             getAt(12, 11) >> [0: newItem('ground', false).place(12, 11, 0)]
             getAt(12, 12) >> [0: newItem('ground', false).place(12, 12, 0), 100: newPropelledItem('girl', true).place(12, 12, 100).pointTo(UP).setLastMoveTick(1L)]
-            getTick() >> 2L
+            getTick() >> 1L
         }
         def renderer = new Renderer(32, 32, 2, 2, world)
         def renderedPerception = renderer.render(povItem, 1, 1, 1)
@@ -159,7 +159,7 @@ class RendererTest extends Specification {
             getAt(12, 10) >> [0: newItem('ground', false).place(12, 10, 0), 100: newPropelledItem('boy', true).place(12, 10, 100).pointTo(DOWN).setLastMoveTick(1L)]
             getAt(12, 11) >> [0: newItem('ground', false).place(12, 11, 0)]
             getAt(12, 12) >> [0: newItem('ground', false).place(12, 12, 0), 100: newPropelledItem('girl', true).place(12, 12, 100).pointTo(UP).setLastMoveTick(1L)]
-            getTick() >> 2L
+            getTick() >> 1L
         }
         def renderer = new Renderer(32, 32, 32, 32, world)
         def renderedPerception = renderer.render(povItem, 1, 1, 1)
