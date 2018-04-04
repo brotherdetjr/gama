@@ -32,8 +32,9 @@ public final class UserSession {
         wsSessions.put(wsSession, new AtomicLong(0));
     }
 
-    public void removeWsSession(WsSession wsSession) {
+    public boolean removeWsSession(WsSession wsSession) {
         wsSessions.remove(wsSession);
+        return wsSessions.isEmpty();
     }
 
     public boolean hasWsSessions() {

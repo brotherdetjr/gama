@@ -123,7 +123,7 @@ public final class App {
                             String token = authService.getToken(ctx);
                             String username = authService.extractUserName(ctx);
                             sessions.computeIfAbsent(token, ignore -> {
-                                log.debug("Starting new session for user {} with token: {}", username, token);
+                                log.info("Starting new session for user {} with token {}", username, token);
                                 return new UserSession(username, randomlyPlacedPropelledItem(world, random));
                             });
                             ctx.renderFreemarker("main.html", ImmutableMap.of("token", token));
@@ -135,10 +135,10 @@ public final class App {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 if (userSession != null) {
-                                    log.debug("New WebSocket for session with token: {}", token);
+                                    log.info("New WebSocket for {}", userSession.getUsername());
                                     userSession.addWsSession(session);
                                 } else {
-                                    log.warn("Requested new WebSocket for unknown token: {}. Disconnecting.", token);
+                                    log.warn("Requested new WebSocket for unknown token {}. Disconnecting.", token);
                                     session.disconnect();
                                 }
                             });
@@ -146,13 +146,17 @@ public final class App {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
-                                log.trace("Action taken by {}: {}", token, moveRequest);
                                 userSession.offerLastRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {
                                 String token = session.queryParam("token");
-                                log.debug("Closing WebSocket for session with token: {}", token);
-                                sessions.get(token).removeWsSession(session);
+                                UserSession userSession = sessions.get(token);
+                                log.debug("Closing WebSocket for {}", userSession.getUsername());
+                                if (userSession.removeWsSession(session)) {
+                                    log.info("Last WebSocket closed for {}", userSession.getUsername());
+                                    world.detach(userSession.getPov());
+                                    sessions.remove(token);
+                                }
                             });
                         }
                 )
