@@ -6,23 +6,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import io.javalin.Javalin;
 import io.javalin.security.Role;
+import org.eclipse.jetty.websocket.api.BatchMode;
+import org.eclipse.jetty.websocket.api.WriteCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.LongSupplier;
 
 import static brotherdetjr.gama.Direction.DOWN;
 import static brotherdetjr.gama.PropelledItem.newPropelledItem;
 import static brotherdetjr.gama.ResourceUtils.asString;
 import static brotherdetjr.gama.UserRole.PLAYER;
+import static brotherdetjr.gama.Utils.nextLong;
 import static com.google.common.collect.ImmutableSet.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Sets.intersection;
 import static io.javalin.ApiBuilder.get;
 import static io.javalin.security.Role.roles;
@@ -36,8 +40,9 @@ public final class App {
 
     public static void main(String[] args) throws Exception {
         int httpPort = 8080;
-        int framePeriodInMillis = 2000;
+        long framePeriodInMillis = 2000;
         int seedSalt = 5537208;
+        boolean keepDisconnectedUser = false;
         ObjectMapper objectMapper = new ObjectMapper();
         AuthService authService = new AuthServiceImpl(seedSalt);
         ImmutableMap<Integer, String> gidToSprite =
@@ -55,42 +60,60 @@ public final class App {
             bants.add(randomlyPlacedPropelledItem(world, random));
         }
         Renderer renderer = new Renderer(32, 32, 2, 2, world);
-        Supplier<Long> timestampSupplier = System::currentTimeMillis;
+        LongSupplier timestampSupplier = System::nanoTime;
         Map<String, UserSession> sessions = newConcurrentMap();
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> {
+                    Map<Long, Map.Entry<PropelledItem, ?>> requests = newTreeMap();
                     for (PropelledItem it : bants) {
                         int idx = random.nextInt(Direction.values().length + 1);
                         if (idx < Direction.values().length) {
-                            MoveRequest r = new MoveRequest(Direction.values()[idx]);
-                            propelledItemMoveHandler.accept(it, r);
+                            long reactionTime = nextLong(random, framePeriodInMillis * 1_000_000L);
+                            Map.Entry<PropelledItem, ?> itemAndRequest =
+                                    new SimpleEntry<>(it, new MoveRequest(Direction.values()[idx]));
+                            requests.put(reactionTime, itemAndRequest);
                         }
                     }
                     sessions.forEach((token, session) -> {
-                        Object lastRequest = session.takeLastRequest();
+                        Object lastRequest = session.takeRequest();
                         if (lastRequest != null) {
-                            if (lastRequest instanceof MoveRequest) {
-                                MoveRequest moveRequest = (MoveRequest) lastRequest;
-                                log.debug("{} is moving {}",
-                                        session.getUsername(), moveRequest.getDirection().toString().toLowerCase());
-                                propelledItemMoveHandler.accept(session.getPov(), moveRequest);
+                            if (log.isDebugEnabled()) {
+                                if (lastRequest instanceof MoveRequest) {
+                                    log.debug("{} is moving {}",
+                                            session.getUsername(),
+                                            ((MoveRequest) lastRequest).getDirection().toString().toLowerCase()
+                                    );
+                                }
                             }
+                            requests.put(session.getReactionTime(), new SimpleEntry<>(session.getPov(), lastRequest));
                         }
                     });
+                    requests.forEach((reactionTime, it) ->
+                            propelledItemMoveHandler.accept(it.getKey(), (MoveRequest) it.getValue())
+                    );
                     sessions.forEach((token, session) -> {
                         try {
                             Perception perception = renderer.render(session.getPov(), 7, 7, 2);
                             String json = objectMapper.writeValueAsString(perception);
-                            log.trace("Sending JSON to {}: {}", session.getUsername(), json);
-                            session.timestampedWsSessions()
-                                    .forEach(entry -> {
-                                        try {
-                                            entry.getKey().getRemote().sendString(json);
-                                            entry.getValue().set(timestampSupplier.get());
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                    });
+                            log.trace("Sending perception to {}: {}", session.getUsername(), json);
+                            session.resetLastSentTimestamp();
+                            session.wsSessions()
+                                    .forEach(ws ->
+                                            ws.getRemote().sendString(json, new WriteCallback() {
+                                                @Override
+                                                public void writeFailed(Throwable x) {
+                                                    log.error("Failed to write WebSocket for {}",
+                                                            session.getUsername(), x);
+                                                }
+
+                                                @Override
+                                                public void writeSuccess() {
+                                                    long timestamp = session.updateLastSentTimestamp();
+                                                    log.debug("Sent perception to {} / {} at {} nanosec",
+                                                            session.getUsername(), ws.getId(), timestamp);
+                                                }
+                                            })
+                                    );
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
@@ -124,7 +147,11 @@ public final class App {
                             String username = authService.extractUserName(ctx);
                             sessions.computeIfAbsent(token, ignore -> {
                                 log.info("Starting new session for user {} with token {}", username, token);
-                                return new UserSession(username, randomlyPlacedPropelledItem(world, random));
+                                return new UserSession(
+                                        username,
+                                        randomlyPlacedPropelledItem(world, random),
+                                        timestampSupplier
+                                );
                             });
                             ctx.renderFreemarker("main.html", ImmutableMap.of("token", token));
                         },
@@ -132,6 +159,7 @@ public final class App {
                 ))
                 .ws("/websocket", ws -> {
                             ws.onConnect(session -> {
+                                session.getRemote().setBatchMode(BatchMode.OFF);
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 if (userSession != null) {
@@ -146,13 +174,14 @@ public final class App {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 MoveRequest moveRequest = objectMapper.readValue(msg, MoveRequest.class);
-                                userSession.offerLastRequest(moveRequest);
+                                userSession.offerRequest(moveRequest);
                             });
                             ws.onClose((session, statusCode, reason) -> {
                                 String token = session.queryParam("token");
                                 UserSession userSession = sessions.get(token);
                                 log.debug("Closing WebSocket for {}", userSession.getUsername());
-                                if (userSession.removeWsSession(session)) {
+                                userSession.removeWsSession(session);
+                                if (!keepDisconnectedUser && !userSession.hasWsSessions()) {
                                     log.info("Last WebSocket closed for {}", userSession.getUsername());
                                     world.detach(userSession.getPov());
                                     sessions.remove(token);
